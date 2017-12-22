@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParseLevel : MonoBehaviour 
+public class ParseLevel : MonoBehaviour
 {
     private enum Directions
     {
-        Right, 
-        Up, 
+        Right,
+        Up,
         Forward
     }
 
@@ -47,10 +47,11 @@ public class ParseLevel : MonoBehaviour
         if(parseLevel)
         {
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-           
+
             Init();
             Run();
             OutputResult();
+            CalculateProbabilities();
             parseLevel = false;
 
             stopwatch.Stop();
@@ -73,7 +74,7 @@ public class ParseLevel : MonoBehaviour
         {
             tiles.Add(child.gameObject);
 
-            if(child.transform.position.x < startPosition.x && 
+            if(child.transform.position.x < startPosition.x &&
                child.transform.position.y < startPosition.y &&
                child.transform.position.z < startPosition.z)
             {
@@ -95,7 +96,7 @@ public class ParseLevel : MonoBehaviour
             foreach(var direction in directions)
             {
                 var tag = tile.tag + " " + direction.ToString();
-                
+
                 var dir = GetDirectionVector(direction);
 
                 var neighbourTag = GetTagOfNeighbour(centre, dir);
@@ -154,10 +155,37 @@ public class ParseLevel : MonoBehaviour
 
     public void OutputResult()
     {
-        csvManager.SetProbabilityValues(outputData);
+        csvManager.SetTotalsValues(outputData);
     }
 
+    // TODO: Make this in a way which doesn't need any of the CSV variables.
+    private void CalculateProbabilities()
+    {
+        var probsList = new List<float>();
 
+        for(var i = 0; i < csvManager.Rows; i++)
+        {
+            var rowTotals = csvManager.RowTotal(i);
+            if(rowTotals < 0) continue;
+
+            probsList.Add(rowTotals);
+            //Debug.Log("Total of row " + i + " is " + rowTotals);
+        }
+
+        int probsID = 0;
+        for(var i = 0; i < csvManager.Probabilities.Count; i++)
+        {
+            if(i % (csvManager.Columns - 1) == 0 && i > 0)
+            {
+                //Debug.Log("new line at i " + i);
+                probsID++;
+            }
+
+            csvManager.Probabilities[i] = csvManager.Totals[i] / probsList[probsID];
+            //Debug.Log("Probablity value of " + i + " is " + (csvManager.Probabilities[i]));
+        }
+
+    }
 
     private Vector3 GetDirectionVector(Directions dir)
     {
