@@ -16,7 +16,7 @@ public class CSVManager : MonoBehaviour
 
     private List<List<string>> gridData = new List<List<string>>();
     private string csvPath = "..//CTPPrototype//Assets//OutputData//";
-    private string csvFile = "Test.csv";
+    private string csvFile = "Output.csv";
 
 
 
@@ -29,7 +29,7 @@ public class CSVManager : MonoBehaviour
     {
         gridData = CsvFileReader.ReadAll(csvPath + csvFile, System.Text.Encoding.GetEncoding("gbk"));
 
-        Debug.Log("REading and grid data size " + gridData.Count);
+        //Debug.Log("REading and grid data size " + gridData.Count);
         int rowIdx = 0;
         int cellIdx = 0;
         foreach(var row in gridData)
@@ -97,8 +97,8 @@ public class CSVManager : MonoBehaviour
     /// <param name="outputData"></param>
     public void SetProbabilityValues(List<ArrayList> outputData)
     {
-        Debug.Log("SETTING NEW PROBABILITY VALUES");
-        Debug.Log("OutputData size " + outputData.Count);
+        // Debug.Log("MESSAGE: SETTING NEW PROBABILITY VALUES");
+        // Debug.Log("MESSAGE: OutputData size " + outputData.Count);
 
         foreach(var data in outputData)
         {
@@ -106,7 +106,7 @@ public class CSVManager : MonoBehaviour
             var columnName = (string)data[1];
             var probability = (float)data[2];
 
-            Debug.Log("From " + rowName + " To " + columnName + " new probability is " + probability);
+            // Debug.Log("MESSAGE: From " + rowName + " To " + columnName + " new probability is " + probability);
 
             for(var i = 0; i < rowIds.Count; i++)
             {
@@ -115,16 +115,16 @@ public class CSVManager : MonoBehaviour
                     if(columnIds[j] == columnName &&
                         rowIds[i] == rowName)
                     {
-                        Debug.Log("Row " + i + " and Col " + j);
+                        //Debug.Log("MESSAGE: Row " + i + " and Col " + j);
 
                         // Debug.Log("From " + rowName + " To " + columnName + " new probability is " + probability);
                         // Debug.Log("Row ID " + j + " and Column ID " + i);
-                        Debug.Log("Columns Count " + columnIds.Count);
+                        //Debug.Log("MESSAGE: Columns Count " + columnIds.Count);
 
                         var gridIdx = (i * columnIds.Count) + j;
                         var probabilityIdx = ConvertToProbabilitiesIdx(gridIdx);
 
-                        Debug.Log("GridIdx is " + gridIdx + " and probabilitiesIdx is " + probabilityIdx);
+                        //Debug.Log("MESSSAGE: GridIdx is " + gridIdx + " and probabilitiesIdx is " + probabilityIdx);
                         probabilities[probabilityIdx] = probability;
                     }
                 }

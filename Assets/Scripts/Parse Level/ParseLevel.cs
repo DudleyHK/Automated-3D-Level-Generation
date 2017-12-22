@@ -33,8 +33,12 @@ public class ParseLevel : MonoBehaviour
     private bool parseLevel = false;
     [SerializeField]
     private Material complete;
+    //[SerializeField]
+    //private float parseTime = 0f;
 
     private CSVManager csvManager;
+
+    public GameObject debug_originObject;
 
 
 
@@ -42,10 +46,15 @@ public class ParseLevel : MonoBehaviour
     {
         if(parseLevel)
         {
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+           
             Init();
             Run();
             OutputResult();
             parseLevel = false;
+
+            stopwatch.Stop();
+            Debug.Log("Time taken to parse level " + stopwatch.Elapsed);
         }
     }
 
@@ -82,17 +91,17 @@ public class ParseLevel : MonoBehaviour
     {
         foreach(var tile in tiles)
         {
-            tile.GetComponent<MeshRenderer>().material = complete;
-
+            var centre = Centre(tile.GetComponent<Renderer>());
             foreach(var direction in directions)
             {
                 var tag = tile.tag + " " + direction.ToString();
-
+                
                 var dir = GetDirectionVector(direction);
-                var neighbourTag = GetTagOfNeighbour(tile.transform.position, dir);
+
+                var neighbourTag = GetTagOfNeighbour(centre, dir);
                 if(neighbourTag == "")
                 {
-                    // Debug.Log("Neighbour in direction " + direction.ToString() + " is nothingness");
+                    // Debug.Log("MESSAGE: Neighbour in direction " + direction.ToString() + " is nothingness");
                     continue;
                 }
 
@@ -104,7 +113,7 @@ public class ParseLevel : MonoBehaviour
                     value++;
 
                     list[2] = value;
-                    Debug.Log("Updated Cell From " + list[0] + " to " + list[1] + " with " + list[2]);
+                    //Debug.Log("MESSAGE: Updated Cell From " + list[0] + " to " + list[1] + " with " + list[2]);
 
                 }
                 else
@@ -116,11 +125,11 @@ public class ParseLevel : MonoBehaviour
 
                     outputData.Add(newList);
                     //  outputData.Add(new ArrayList { tag, neighbourTag, 1});
-                    Debug.Log("From " + newList[0] + " to " + newList[1] + " are being added to outputData with data of " + newList[2]);
+                    //Debug.Log("MESSAGE: From " + newList[0] + " to " + newList[1] + " are being added to outputData with data of " + newList[2]);
                 }
-
+                // DebugDrawLines(direction, centre, dir);
             }
-            
+            //var debugObj = Instantiate(debug_originObject, centre, Quaternion.identity);
         }
     }
 
@@ -165,16 +174,39 @@ public class ParseLevel : MonoBehaviour
     private string GetTagOfNeighbour(Vector3 origin, Vector3 dir)
     {
         RaycastHit hitInfo;
-        var hit = Physics.Raycast(origin, dir, out hitInfo);
+        var hit = Physics.Raycast(origin, dir, out hitInfo, 20f);
         if(hit)
         {
             return hitInfo.collider.tag;
         }
         else
         {
-         //   Debug.Log("Raycast at position " + origin + " didn't hit anything");
+            //Debug.Log("Raycast at position " + origin + " in direction " + dir + " didn't hit anything");
+            //Debug.DrawRay(origin, dir, Color.magenta, 100f);
+            return "Air";
         }
+    }
 
-        return "";
+    private void DebugDrawLines(Directions directions, Vector3 origin, Vector3 dir)
+    {        
+        switch(directions)
+        {
+            case Directions.Right:
+                Debug.DrawRay(origin, dir, Color.red, 100f);
+                break;
+            case Directions.Up:
+                Debug.DrawRay(origin, dir, Color.green, 100f);
+                break;
+            case Directions.Forward:
+                Debug.DrawRay(origin, dir, Color.blue, 100f);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private Vector3 Centre(Renderer renderer)
+    {
+        return renderer.bounds.center;
     }
 }
