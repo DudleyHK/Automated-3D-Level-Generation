@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Directions
+{
+    Right,
+    Up,
+    Forward
+}
+
+
 public class ParseLevel : MonoBehaviour
 {
-    private enum Directions
-    {
-        Right,
-        Up,
-        Forward
-    }
 
 
     [SerializeField]

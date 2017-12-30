@@ -1,13 +1,13 @@
 ,Mud,Grass,Water,Wall,Air
-Mud Right,0.9,0,0,0.1,0
-Mud Up,0,0.84,0.15,0,0.01
-Mud Forward,0.9,0,0,0.1,0
-Grass Right,0,0.8214286,0.05952381,0.1190476,0
-Grass Up,0,0,0,0.2380952,0.7619048
-Grass Forward,0,0.8452381,0.03571429,0.1190476,0
-Water Right,0,0.25,0.55,0.2,0
-Water Up,0,0,0.25,0,0.75
-Water Forward,0,0.15,0.65,0.05,0.15
-Wall Right,0.04901961,0.04901961,0.01960784,0.5882353,0.2941177
-Wall Up,0,0,0,0.6862745,0.3137255
-Wall Forward,0.04901961,0.04901961,0.004901961,0.6911765,0.2058824
+Mud Right,0.5,0,0,0,0.5
+Mud Up,0,1,0,0,0
+Mud Forward,0.5,0,0,0,0.5
+Grass Right,0,0.5,0,0,0.5
+Grass Up,0,0,0,0,1
+Grass Forward,0,0.5,0,0,0.5
+Water Right,NaN,NaN,NaN,NaN,NaN
+Water Up,NaN,NaN,NaN,NaN,NaN
+Water Forward,NaN,NaN,NaN,NaN,NaN
+Wall Right,NaN,NaN,NaN,NaN,NaN
+Wall Up,NaN,NaN,NaN,NaN,NaN
+Wall Forward,NaN,NaN,NaN,NaN,NaN

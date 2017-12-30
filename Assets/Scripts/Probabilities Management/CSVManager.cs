@@ -19,7 +19,8 @@ public class CSVManager : MonoBehaviour
     private List<string> columnIds    = new List<string>();
 
     private List<List<string>> gridData = new List<List<string>>();
-    private string csvPath = "..//CTPPrototype//Assets//OutputData//";
+    private List<List<string>> probabsData = new List<List<string>>();
+    private string csvPath        = "..//CTPPrototype//Assets//OutputData//";
     private string csvTotalsFile  = "Totals.csv";
     private string csvProbabsFile = "Probabilities.csv";
 
@@ -34,6 +35,12 @@ public class CSVManager : MonoBehaviour
     }
 
     private void Read()
+    {
+        ReadTotals();
+        ReadProbabilities();
+    }
+
+    private void ReadTotals()
     {
         // TODO: Change this to read in the probabilities
         gridData = CsvFileReader.ReadAll(csvPath + csvTotalsFile, System.Text.Encoding.GetEncoding("gbk"));
@@ -54,13 +61,12 @@ public class CSVManager : MonoBehaviour
                 {
                     rowIds.Add(cell);
                 }
-                
+
                 float result;
                 bool isNumeric = float.TryParse(cell, out result);
                 if(isNumeric)
                 {
                     Totals.Add(result);
-                    Probabilities.Add(0f);
                 }
 
                 cellIdx++;
@@ -70,6 +76,24 @@ public class CSVManager : MonoBehaviour
         }
         Rows = rowIds.Count;
         Columns = columnIds.Count;
+    }
+
+    private void ReadProbabilities()
+    {
+        // TODO: Change this to read in the probabilities
+        probabsData = CsvFileReader.ReadAll(csvPath + csvProbabsFile, System.Text.Encoding.GetEncoding("gbk"));
+        foreach(var row in probabsData)
+        {
+            foreach(var cell in row)
+            {
+                float result;
+                bool isNumeric = float.TryParse(cell, out result);
+                if(isNumeric)
+                {
+                    Probabilities.Add(result);
+                }
+            }
+        }
     }
 
 
@@ -119,6 +143,12 @@ public class CSVManager : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// Calculate the total of each row.
+    /// </summary>
+    /// <param name="rowID"></param>
+    /// <returns></returns>
     public float RowTotal(int rowID)
     {
         if(rowID == 0)
@@ -148,6 +178,64 @@ public class CSVManager : MonoBehaviour
             }
         }
         return rowTotal;
+    }
+
+
+    /// <summary>
+    /// Return a list of probabilties given a RowID string. 
+    /// </summary>
+    /// <param name="rowID"></param>
+    /// <returns></returns>
+    public List<float> ProbabiltiesOfRow(string rowID)
+    {
+        if(!rowIds.Contains(rowID))
+        {
+            Debug.Log("ERROR: RowID string invalid");
+            return null;
+        }
+
+        var probabilityList = new List<float>();
+
+        var prevId = -1f; // TODO: Make the getting of data from different lists more reliable... ??? What is this for?
+        for(var i = 0; i < rowIds.Count; i++)
+        {
+            if(rowIds[i] != rowID) continue;
+            for(var j = 0; j < columnIds.Count; j++)
+            {
+                var gridIdx = (i * columnIds.Count) + j;
+                var probabilitiesIdx = ConvertToProbabilitiesIdx(gridIdx);
+                if(probabilitiesIdx == prevId)
+                {
+                    continue;
+                }
+
+                probabilityList.Add(Probabilities[probabilitiesIdx]);
+                prevId = probabilitiesIdx;
+            }
+        }
+        return probabilityList;
+    }
+
+
+    /// <summary>
+    /// Get the name of a column given an ID. 
+    /// </summary>
+    /// <param name="columnID"></param>
+    /// <returns></returns>
+    public string NameOfColumn(int id)
+    {
+        // Add one to counter the offset from zero as zero has no value. 
+        var columnID = id + 1;
+
+        Debug.Log("ColumnID is " + columnID);
+
+        if(columnID > columnIds.Count)
+        {
+            Debug.Log("ERROR: ColumnID passed to CSVManager is more than the amount of IDs in the list.");
+            return "";
+        }
+
+        return columnIds[columnID];
     }
 
 
@@ -183,6 +271,7 @@ public class CSVManager : MonoBehaviour
         }
         return probabilityIdx;
     }
+
 
 
     private void Write()
@@ -257,64 +346,3 @@ public class CSVManager : MonoBehaviour
         Write();
     }
 }
-
-
-
-
-
-
-
-/*        //var probability = 0f;
-        var rowTotal    = 0f;
-        for(var i = 0  ; i < probabilities.Count; i++)
-        {
-            var x = 0;
-            var y = 0;
-            var valueId = Utilities.GetGridID(i, columnIds.Count, out x, out y);
-
-            Debug.Log("MESSAGE: GridIdx   is " + i);
-            Debug.Log("MESSAGE: TotalsIdx is " + valueId + " x " + x + " and y " + y);
-
-            float result;
-            var parsed = float.TryParse(gridData[x][y], out result);
-            if(parsed)
-            {
-                rowTotal += result;
-            }
-        }
-
-        //for(var i = 0; i < rowIds.Count; i++)
-        //{
-        //    for(var j = 0; j < columnIds.Count; j++)
-        //    {
-                
-
-        //        var gridIdx   = (i * columnIds.Count) + j;
-               
-
-
-
-
-
-        //        //rowTotal += totals[totalsIdx];
-        //    }
-        //
-        //    for(var j = 0; j < columnIds.Count; j++)
-        //    {
-        //        var gridIdx = (i * columnIds.Count) + j;
-        //        var totalsIdx = ConvertToProbabilitiesIdx(gridIdx);
-        //
-        //        probability = totals[totalsIdx];
-        //        probability /= rowTotal;
-        //        probabilities[totalsIdx] = probability;
-        //
-        //        gridData[i][j] = probabilities[totalsIdx].ToString();
-        //
-        //
-        //        Debug.Log("MESSAGE: Total value " + totals[totalsIdx] + " at cell " + totalsIdx + " has a probability value of " + probability);
-        //    }
-        //    rowTotal = 0f;
-        //    probability = 0f;
-      //  }
-        // CsvFileWriter.WriteAll(gridData, csvPath + csvProbabsFile, System.Text.Encoding.GetEncoding("gbk"));
-*/
