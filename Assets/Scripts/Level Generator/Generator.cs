@@ -9,7 +9,7 @@ public class Generator : MonoBehaviour
     [SerializeField]
     private List<GameObject> tilePrefabs = new List<GameObject>();
     [SerializeField]
-    private List<string> textLevel = new List<string>(new string[] { "M", "G", "A", "M", "WL", "A", "WA", "G"});
+    private List<string> textLevel;
     [SerializeField]
     private List<Material> materials = new List<Material>();
     [SerializeField]
@@ -45,7 +45,16 @@ public class Generator : MonoBehaviour
             Debug.Log("ERROR: TilePrefabs list in GeneratorManager is empty. This list must be full to generate a tile map.");
         }
 
-        textLevel = new List<string>(new string[] { "M", "G", "A", "M", "WL", "A", "WA", "G" });
+        // TODO: Change from predefined to generated
+        textLevel = new List<string>(new string[] 
+        { 
+            "M", "G",  "A", 
+            "A", "WL", "G", 
+            
+            "G", "A", "M", 
+            "WA", "M", "A" 
+        });
+        // textLevel = new List<string>(new string[] { "M", "G", "A", "A", "WL", "G", "G", "A", "M", "WA", "M", "A" });
     }
 
 
@@ -81,27 +90,26 @@ public class Generator : MonoBehaviour
 
     /// <summary>
     /// The way index is taken is shuffled due to using maxHeight where most people use width. 
-    ///     The original algorithm was i * height * depth + j * depth + k;
     /// </summary>
     private void GenerateStringLevel()
     {
         /*Being the Main Generation Loop*/
         for(int i = 0; i < maxHeight; i++)
         {
-            var hIndex = (i * maxDepth * maxDepth);
             for(int j = 0; j < maxDepth; j++)
             {
-                var dIndex = (j * maxDepth);
+                var index2D = (i * maxHeight + j);
+                
                 for(int k = 0; k < maxWidth; k++)
                 {
-                    var index = hIndex + dIndex + k;
-                    //Debug.Log("MESSAGE: 3D Grid Index is " + index);
+                    var index3D = index2D * maxWidth + k;
+                    //Debug.Log("MESSAGE: 3D Grid Index is " + index3D);
 
-                    var upIndex      = GetGridUp(index);
-                    var forwardIndex = GetGridForward(index);
-                    var rightIndex   = GetGridRight(index);
+                    var upIndex      = GetGridUp(index3D);
+                    var forwardIndex = GetGridForward(index3D);
+                    var rightIndex   = GetGridRight(index3D);
 
-                    Debug.Log("Index " + index + " tile " + textLevel[index]);
+                    Debug.Log("Index " + index3D + " tile " + textLevel[index3D]);
 
                     if(rightIndex >= 0)
                     {
@@ -183,13 +191,11 @@ public class Generator : MonoBehaviour
     private void PrintTextLevel()
     {
         System.IO.StreamWriter streamWriter = new System.IO.StreamWriter(Application.dataPath + "/OutputData/" + textLevelOutput);
-        Debug.Log("MESSAGE: " + Application.dataPath +"/OutputData/" + textLevelOutput);
+        Debug.Log("MESSAGE: " + Application.dataPath + "/OutputData/" + textLevelOutput);
 
         streamWriter.Flush();
         for(int i = 0; i < maxHeight; i++)
         {
-            var hIndex = (i * maxDepth * maxDepth);
-
             if(i == 0)
             {
                 streamWriter.WriteLine("Bottom Layer");
@@ -205,13 +211,13 @@ public class Generator : MonoBehaviour
 
             for(int j = 0; j < maxDepth; j++)
             {
-                var dIndex = (j * maxDepth);
+                var index2D = (i * maxHeight + j);
                 var layerString = "";
 
                 for(int k = 0; k < maxWidth; k++)
                 {
-                    var index = hIndex + dIndex + k;
-                    var tile = textLevel[index];
+                    var index3D = index2D * maxWidth + k;
+                    var tile = textLevel[index3D];
 
                     layerString += tile;
                     layerString += " ";
@@ -227,19 +233,32 @@ public class Generator : MonoBehaviour
 
     private int GetGridUp(int index)
     {
+        var nextIndex = index + (maxWidth * maxDepth);
+
         if(!SanityCheckIndex(index))
             return -1;
 
-        return (index + (maxWidth * maxDepth));
+        if(!SanityCheckIndex(nextIndex))
+        {
+            Debug.Log("INVALID: NextIndex is invalid");
+            return -1;
+        }
+
+
+        return nextIndex;
     }
 
 
     private int GetGridRight(int index)
     {
+        var nextIndex = (index + 1);
+
         if(!SanityCheckIndex(index))
             return -1;
-       
-        var nextIndex = (index + 1);
+
+        if(!SanityCheckIndex(nextIndex))
+            return -1;
+
 
         var x = 0;
         var y = 0;
@@ -275,10 +294,13 @@ public class Generator : MonoBehaviour
 
     private int GetGridForward(int index)
     {
+        var nextIndex = (index + maxWidth);
+
         if(!SanityCheckIndex(index))
             return -1;
-         
-        var nextIndex = (index + maxWidth);
+
+        if(!SanityCheckIndex(nextIndex))
+            return -1;
 
         var currentY = index / (maxWidth * maxDepth);
         var nextY = nextIndex / (maxWidth * maxDepth);
@@ -290,6 +312,16 @@ public class Generator : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Pass in a 3D grid index and get all of the coordinates back. 
+    /// TODO: Update this so it uses the standard way of getting cooridnates which i cant
+    ///     work out at the moment. 
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="z"></param>
+    /// <returns></returns>
     private bool GetIndexCoordinates(int index, out int x, out int y, out int z)
     {
         x = -1;
@@ -303,16 +335,14 @@ public class Generator : MonoBehaviour
         }
 
 
-        /*Being the Main Generation Loop*/
         for(int i = 0; i < maxHeight; i++)
         {
-            var hIndex = (i * maxDepth * maxDepth);
             for(int j = 0; j < maxDepth; j++)
             {
-                var dIndex = (j * maxDepth);
+                var index2D = (j * maxHeight + j);
                 for(int k = 0; k < maxWidth; k++)
                 {
-                    var flatID = hIndex + dIndex + k;
+                    var flatID = index2D * maxWidth + k;
                     if(flatID == index)
                     {
                         x = k;
@@ -328,7 +358,9 @@ public class Generator : MonoBehaviour
 
     private bool SanityCheckIndex(int index)
     {
-        if(index > (maxWidth * maxHeight * maxDepth))
+        //Debug.Log("MESSAGE: Sanity checking " + index);
+
+        if(index >= (maxWidth * maxHeight * maxDepth))
         {
             Debug.Log("ERROR: Index is more than array size");
             return false;
