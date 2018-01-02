@@ -34,6 +34,15 @@ public class CSVManager : MonoBehaviour
         Read();
     }
 
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.W))
+        {
+            Write();
+        }
+    }
+
     private void Read()
     {
         ReadTotals();
@@ -190,7 +199,7 @@ public class CSVManager : MonoBehaviour
     {
         if(!rowIds.Contains(rowID))
         {
-            Debug.Log("ERROR: RowID string invalid");
+            Debug.Log("ERROR: RowID " + rowID + " string invalid");
             return null;
         }
 
@@ -224,18 +233,13 @@ public class CSVManager : MonoBehaviour
     /// <returns></returns>
     public string NameOfColumn(int id)
     {
-        // Add one to counter the offset from zero as zero has no value. 
-        var columnID = id + 1;
-
-        Debug.Log("ColumnID is " + columnID);
-
-        if(columnID > columnIds.Count)
+        if(id > columnIds.Count)
         {
             Debug.Log("ERROR: ColumnID passed to CSVManager is more than the amount of IDs in the list.");
             return "";
         }
 
-        return columnIds[columnID];
+        return columnIds[id];
     }
 
 
@@ -278,6 +282,8 @@ public class CSVManager : MonoBehaviour
     {
         WriteTotals();
         WriteProbabilities();
+
+        Debug.Log("MESSAGE: CSVManager Written Level");
     }
 
 

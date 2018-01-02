@@ -7,13 +7,21 @@ public class Generator : MonoBehaviour
     [SerializeField]
     private List<GameObject> generatedTiles = new List<GameObject>();
     [SerializeField]
-    private GameObject firstBlockPrefab;
+    private List<GameObject> tilePrefabs = new List<GameObject>();
     [SerializeField]
-    private bool runGenerator = false;
+    private GameObject firstBlockPrefab;
     [SerializeField]
     private CSVManager csvManager;
     [SerializeField]
-    private List<GameObject> tilePrefabs = new List<GameObject>();
+    private int maxHeight = 10;
+    [SerializeField]
+    private int maxWidth  = 10;
+    [SerializeField]
+    private int maxDepth  = 10;
+    [SerializeField]
+    private bool runGenerator = false;
+
+
 
     private List<Directions> directions = new List<Directions>(new Directions[] { Directions.Right, Directions.Forward });
 
@@ -36,7 +44,7 @@ public class Generator : MonoBehaviour
 
     private void Update()
     {
-        if(runGenerator)
+        if(runGenerator || Input.GetKeyDown(KeyCode.G))
         {
             StartCoroutine(Run());
             runGenerator = false;
@@ -46,67 +54,75 @@ public class Generator : MonoBehaviour
 
     private IEnumerator Run()
     {
-        /* Initialise the Generation Process */
+        var index = 0;
+        var counter = 0;
 
+
+
+
+        /* Initialise the Generation Process */
         // Instantiate the first Tile 
         var initialTile = Instantiate(firstBlockPrefab, Vector3.zero, Quaternion.identity);
 
         // Add the Tile to the list of all generated tiles.
         generatedTiles.Add(initialTile);
 
-
-
         /*Being the Main Generation Loop*/
-        for(int i = 0; i < generatedTiles.Count; i++)
+        for(int i = 0; i < maxHeight; i++)
         {
-            if(generatedTiles.Count >= 4)
-                break;
-
-            var tile = generatedTiles[i];
-            var type = tile.tag;
-
-            foreach(var direction in directions)
+            for(int j = 0; j < maxWidth; j++)
             {
-                var rowID = type.ToString() + " " + direction.ToString();
-                var probabilities = csvManager.ProbabiltiesOfRow(rowID);
-                
-                var debug_probabilities = "";
-                foreach(var item in probabilities)
+                for(int k = 0; k < maxDepth; k++)
                 {
-                    debug_probabilities += item.ToString() + ", ";
+                    Debug.Log("MESSAGE: Grid coordinate id is " + counter);
+                    var tile = generatedTiles[counter];
+                    var type = tile.tag;
+
+                    foreach(var direction in directions)
+                    {
+                        var rowID = type.ToString() + " " + direction.ToString();
+                        var probabilities = csvManager.ProbabiltiesOfRow(rowID);
+
+                        Debug.Log("MESSAGE: Row ID is " + rowID);
+
+                        ///var debug_probabilities = "";
+                        ///foreach(var item in probabilities)
+                        ///{
+                        ///    debug_probabilities += item.ToString() + ", ";
+                        ///}
+                        ///Debug.Log("MESSAGE: Probabilities for rowID " + rowID + " is " + debug_probabilities); 
+
+                        var tilePrefab = NextTile(probabilities);
+                        Debug.Log("MESSAGE: Next tile type is " + tilePrefab.tag);
+
+
+                        Vector3 newPosition = tile.GetComponent<Renderer>().bounds.center;
+
+                        if(direction == Directions.Forward)
+                        {
+                            newPosition.z += tile.GetComponent<Renderer>().bounds.size.z;
+                        }
+                        else if(direction == Directions.Right)
+                        {
+                            newPosition.x += tile.GetComponent<Renderer>().bounds.size.x;
+                        }
+
+                        var newTile = Instantiate(tilePrefab, newPosition, Quaternion.identity);
+                        generatedTiles.Add(newTile);
+                        index++;
+                    }
+                    counter++;
                 }
-                Debug.Log("MESSAGE: Probabilities for rowID " + rowID + " is " + debug_probabilities); 
-
-                var tilePrefab = NextTile(probabilities);
-                Debug.Log("MESSAGE: Next tile type is " + tilePrefab.tag);
-
-
-                Vector3 newPosition = tile.GetComponent<Renderer>().bounds.center;
-
-                if(direction == Directions.Forward)
-                {
-                    newPosition.z += tile.GetComponent<Renderer>().bounds.size.z;
-                }
-                else if(direction == Directions.Right)
-                {
-                    newPosition.x += tile.GetComponent<Renderer>().bounds.size.x;
-                }
-
-                var newTile = Instantiate(tilePrefab, newPosition, Quaternion.identity);
-                generatedTiles.Add(newTile);
-                //i--;
-            }   
-
-
+            }
         }
-
         yield return true;
     }
 
     /// <summary>
-    /// First while loop, get the probabilty which will be used and the index of that probability.
-    /// Second get the from (column) tag  using the index the probabilty was at and use it 
-    ///     to get the appropriate gameobject prefab to be generated.
+    /// First: Get the probabilty which will be used and the index of that probability.
+    ///
+    /// Second: Get the 'column' type from the CSV file and use it to reference the GameObject prefab
+    ///     in the prefabs list. 
     ///     
     /// This is currently only taking into account a single parent tile. 
     /// </summary>
@@ -118,28 +134,17 @@ public class Generator : MonoBehaviour
         float probability = 0f;
 
         /*FIRST */
-
-        var use = false;
-        while(!use)
+        index = 0;
+        foreach(var probab in probabilties)
         {
-            index = 0;
-            foreach(var probab in probabilties)
+            index++;
+            
+            probability = probab;
+            if(FlipCoin(probability))
             {
-                if(probab == 0)
-                {
-                    index++;
-                    continue;
-                }
-                
-                probability = probab;
-                use = FlipCoin(probability);
-                if(use) break;
-
-                index++;
+                break;
             }
         }
-
-        Debug.Log("Pre ColID" + index);
 
         /*SECOND */
         var type = csvManager.NameOfColumn(index);
@@ -170,8 +175,8 @@ public class Generator : MonoBehaviour
     private bool FlipCoin(float probability)
     {
         var value = Random.Range(0f, 1f);
-        Debug.Log("Probab is " + probability);
-        Debug.Log("Random value is " + value);
+        //Debug.Log("MESSAGE: Probab is " + probability);
+        //Debug.Log("MESSAGE: Random value is " + value);
         if(probability > value) return true;
 
         return false;

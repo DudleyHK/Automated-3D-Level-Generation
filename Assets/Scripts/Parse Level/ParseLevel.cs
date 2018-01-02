@@ -46,7 +46,7 @@ public class ParseLevel : MonoBehaviour
 
     private void Update()
     {
-        if(parseLevel)
+        if(parseLevel || Input.GetKeyDown(KeyCode.P))
         {
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
@@ -68,9 +68,18 @@ public class ParseLevel : MonoBehaviour
     public void Init()
     {
         csvManager = FindObjectOfType<CSVManager>();
-        if(!csvManager) Debug.Log("ERROR: CSVManager object is not active in Scene");
+        if(!csvManager)
+        {
+            Debug.Log("ERROR: CSVManager object is not active in Scene");
+            return;
+        }
 
-        if(!level) Debug.Log("ERROR: Level object has not been set.");
+        if(!level)
+        {
+            Debug.Log("ERROR: Level object has not been set.");
+            return;
+        }
+
         int idx = 0;
         foreach(Transform child in level.transform)
         {
