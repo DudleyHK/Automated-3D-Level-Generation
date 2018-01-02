@@ -99,6 +99,8 @@ public class CSVManager : MonoBehaviour
                 bool isNumeric = float.TryParse(cell, out result);
                 if(isNumeric)
                 {
+                    if(result == float.NaN)
+                        result = 0f;
                     Probabilities.Add(result);
                 }
             }
@@ -301,7 +303,11 @@ public class CSVManager : MonoBehaviour
                 bool isNumeric = float.TryParse(cell, out result);
                 if(isNumeric)
                 {
-                    gridData[rowIdx][cellIdx] = Totals[totalsIdx].ToString();
+                    var total = Totals[totalsIdx];
+                    if(total == float.NaN) 
+                        total = 0f;
+
+                    gridData[rowIdx][cellIdx] = total.ToString();
                     //Debug.Log("Probability idx is " + probabilityIdx + " and gridDataIdx is " + ((cellIdx * row.Count) + rowIdx));
                     totalsIdx++;
                 }
@@ -332,6 +338,17 @@ public class CSVManager : MonoBehaviour
                 bool isNumeric = float.TryParse(cell, out result);
                 if(isNumeric)
                 {
+                   // Debug.Log("Probability idx is " + probabsIdx + " has a value of " + Probabilities[probabsIdx].ToString());
+                   
+                    if(Probabilities[probabsIdx] == float.NaN)
+                    {
+                        Probabilities[probabsIdx] = 0f;
+                    }
+
+
+                     
+                       
+
                     gridData[rowIdx][cellIdx] = Probabilities[probabsIdx].ToString();
                     //Debug.Log("Probability idx is " + probabsIdx + " has a value of " + Probabilities[probabsIdx].ToString());
                     probabsIdx++;

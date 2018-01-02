@@ -15,11 +15,21 @@ public class Utilities : ScriptableObject
     /// <param name="x"></param>
     /// <param name="y"></param>
     /// <returns></returns>
-    public static int GetGridID(int id, int width, int height, out int x, out int y)
+    public static int Get2DGridID(int id, int width, int height, out int x, out int y)
     {
         x = id % width;
         y = id / height;
         
         return (x * width) + y;
     }
+
+    public static int Get3DGridID(int id, int width, int height, int depth, out int x, out int y, out int z)
+    {
+        x = id % width;
+        y = (id / width) % height;
+        z = id / (width * height);
+
+        return (x * width) + y;
+    }
+
 }
