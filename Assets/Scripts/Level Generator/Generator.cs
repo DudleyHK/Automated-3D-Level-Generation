@@ -45,22 +45,23 @@ public class Generator : MonoBehaviour
             Debug.Log("ERROR: TilePrefabs list in GeneratorManager is empty. This list must be full to generate a tile map.");
         }
 
-        // TODO: Change from predefined to generated
-        //textLevel = new List<KeyValuePair<string, List<float>>>()
-        //{
-        //    new KeyValuePair<string, List<float>>("M", new List<float>()),
-        //    new KeyValuePair<string, List<float>>("G", new List<float>() ),
-        //    new KeyValuePair<string, List<float>>("A", new List<float>() ),
-        //    new KeyValuePair<string, List<float>>("A", new List<float>() ),
-        //    new KeyValuePair<string, List<float>>("WL", new List<float>()),
-        //    new KeyValuePair<string, List<float>>("G", new List<float>() ),
-        //    new KeyValuePair<string, List<float>>("G", new List<float>() ),
-        //    new KeyValuePair<string, List<float>>("A", new List<float>() ),
-        //    new KeyValuePair<string, List<float>>("M", new List<float>() ),
-        //    new KeyValuePair<string, List<float>>("WA", new List<float>()),
-        //    new KeyValuePair<string, List<float>>("M", new List<float>() ),
-        //    new KeyValuePair<string, List<float>>("A", new List<float>() )
-        //};
+ ////       TODO:
+ ////       Change from predefined to generated
+ ////textLevel = new List<KeyValuePair<string, List<float>>>()
+ ////{
+ ////           new KeyValuePair<string, List<float>>("M", new List<float>()),
+ ////           new KeyValuePair<string, List<float>>("G", new List<float>() ),
+ ////           new KeyValuePair<string, List<float>>("A", new List<float>() ),
+ ////           new KeyValuePair<string, List<float>>("A", new List<float>() ),
+ ////           new KeyValuePair<string, List<float>>("WL", new List<float>()),
+ ////           new KeyValuePair<string, List<float>>("G", new List<float>() ),
+ ////           new KeyValuePair<string, List<float>>("G", new List<float>() ),
+ ////           new KeyValuePair<string, List<float>>("A", new List<float>() ),
+ ////           new KeyValuePair<string, List<float>>("M", new List<float>() ),
+ ////           new KeyValuePair<string, List<float>>("WA", new List<float>()),
+ ////           new KeyValuePair<string, List<float>>("M", new List<float>() ),
+ ////           new KeyValuePair<string, List<float>>("A", new List<float>() )
+ ////};
 
         textLevel = new List<KeyValuePair<string, List<float>>>();
     }
@@ -111,10 +112,40 @@ public class Generator : MonoBehaviour
 
     private IEnumerator Build()
     {
+        var tileSize = tilePrefabs[0].GetComponent<Renderer>().bounds.size;
+        var initialPosition = Vector3.zero;
+        var spawnPosition = Vector3.zero;
 
+        for(int i = 0; i < maxHeight; i++)
+        {
+            for(int j = 0; j < maxDepth; j++)
+            {
+                for(int k = 0; k < maxWidth; k++)
+                {
+                    var index = (i * maxHeight + j) * maxWidth + k;
 
+                    if(index == 0)
+                    {
+                        spawnPosition = initialPosition;
+                    }
+                    else
+                    {
+                        spawnPosition.x += tileSize.x;
+                    }
 
+                    var type = ConvertToType(textLevel[index].Key);
+                    var tilePrefab = TilePrefab(type);
 
+                    var clone = Instantiate(tilePrefab, spawnPosition, Quaternion.identity);
+
+                    generatedTiles.Add(clone);
+                }
+                spawnPosition.z += tileSize.z;
+                spawnPosition.x = 0;
+            }
+            spawnPosition.y += tileSize.y;
+            spawnPosition.z = 0;
+        }
         yield return true;
     }
 
@@ -722,13 +753,10 @@ public class Generator : MonoBehaviour
 
     private GameObject TilePrefab(string type)
     {
-        GameObject tilePrefab = null;
-
-        foreach(var tile in tilePrefabs)
+        var tilePrefab = tilePrefabs.Find(tile => 
         {
-            if(tile.tag == type)
-                tilePrefab = tile;
-        }
+           return tile.tag == type;
+        });
 
         if(tilePrefab == null)
         {
