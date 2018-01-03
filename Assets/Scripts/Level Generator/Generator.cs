@@ -74,11 +74,17 @@ public class Generator : MonoBehaviour
             StartCoroutine(Run());
             runGenerator = false;
         }
+
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            StartCoroutine(Build());
+        }
     }
 
 
     private IEnumerator Run()
     {
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
         //var counter = 0;
 
         /* Initialise the Generation Process */
@@ -93,9 +99,25 @@ public class Generator : MonoBehaviour
         GenerateStringLevel();
         PrintTextLevel();
 
-         
+
+
+        stopwatch.Stop();
+        Debug.Log("Time taken to generate level " + stopwatch.Elapsed);
+
+
         yield return true;
     }
+
+
+    private IEnumerator Build()
+    {
+
+
+
+
+        yield return true;
+    }
+
     private void InitialiseStringLevel()
     {
         /*Being the Main Generation Loop*/
@@ -216,24 +238,30 @@ public class Generator : MonoBehaviour
             direction = "Right";
             tileType = ConvertToType(tileChar) + " " + direction;
             standardProbabilities = csvManager.ProbabiltiesOfRow(tileType);
-            tileChar = NextTextTile(standardProbabilities);
-            AddTextTile(tileChar, rightIndex, direction);
+            var newTileChar = NextTextTile(standardProbabilities);
+            AddTextTile(newTileChar, rightIndex, direction);
+
+            Debug.Log("MESSAGE: Adding a tile " + tileChar + " ," + tileType);
         }
         if(upIndex >= 0)
         {
             direction = "Up";
             tileType = ConvertToType(tileChar) + " " + direction;
             standardProbabilities = csvManager.ProbabiltiesOfRow(tileType);
-            tileChar = NextTextTile(standardProbabilities);
-            AddTextTile(tileChar, upIndex, direction);
+            var newTileChar = NextTextTile(standardProbabilities);
+            AddTextTile(newTileChar, upIndex, direction);
+
+            Debug.Log("MESSAGE: Adding a tile " + tileChar + " ," + tileType);
         }
         if(forwardIndex >= 0)
         {
             direction = "Forward";
             tileType = ConvertToType(tileChar) + " " + direction;
             standardProbabilities = csvManager.ProbabiltiesOfRow(tileType);
-            tileChar = NextTextTile(standardProbabilities);
-            AddTextTile(tileChar, forwardIndex, direction);
+            var newTileChar = NextTextTile(standardProbabilities);
+            AddTextTile(newTileChar, forwardIndex, direction);
+
+            Debug.Log("MESSAGE: Adding a tile " + tileChar + " ," + tileType);
         }
     }
 
@@ -260,7 +288,7 @@ public class Generator : MonoBehaviour
                 return;
             }
 
-            Debug.Log("MESSAGE: Updating the probabilty list of index " + index);
+            Debug.Log("MESSAGE: Updating the probabilty list of index " + index + "(tileChar "  + tileChar + ")");
             Debug.Log("TODO: Update the tileChar after the probablist has been updated");
             for(int i = 0; i < textLevel[index].Value.Count; i++)
             {
@@ -288,8 +316,11 @@ public class Generator : MonoBehaviour
                     value *= probabilty;
                 }
 
-                probabilitiesList[i] = value;
+                textLevel[index].Value[i] = value;
             }
+
+            tileChar = NextTextTile(textLevel[index].Value);
+            Debug.Log("MESSAGE: Updating to " + tileChar);
         }
         // Set a basic probabilties matrix for the tile. 
         else
@@ -323,31 +354,38 @@ public class Generator : MonoBehaviour
     private string NextTextTile(List<float> probabilities)
     {
         var index = GetIndexOfProbability(probabilities);
+
+
         var type = csvManager.NameOfColumn(index);
         var tileChar = ConvertToChar(type);
+
+        Debug.Log("Index " + index + " gets tileChar " + type);
+
+
 
         return tileChar;
     }
 
     private int GetIndexOfProbability(List<float> probabilities)
     {
-        int index = -1;
-        //bool complete = false;
-
-       while(true)
+        int counter = 0;
+        int listID = 0;
+        
+        while(counter < 100)
         {
-            break;
-        }
+            Debug.Log("Counter " + counter);
 
-       // index = 0;
-       //
-       //     index++;
-       //
-       //     complete = FlipCoin(probab);
-       //     if(complete)
-       //         break;
-       // }
-        return index;
+            if(listID >= probabilities.Count)
+                listID = 0;
+
+
+            if(FlipCoin(probabilities[listID++]))
+            {
+                break;
+            }
+            counter++;
+        }
+        return listID;
     }
 
     private string ConvertToType(string tileChar)
@@ -408,7 +446,7 @@ public class Generator : MonoBehaviour
         }
         else
         {
-            Debug.Log("ERROR: Invalid type passed to tileChar converter");
+            Debug.Log("ERROR: Invalid type " + type +  " passed to tileChar converter");
         }
 
         return tileChar;
@@ -710,10 +748,14 @@ public class Generator : MonoBehaviour
     /// </returns>
     private bool FlipCoin(float probability)
     {
+        if(probability <= 0) return false;
+        if(probability == float.NaN) return false;
+
         var value = Random.Range(0f, 1f);
-        //Debug.Log("MESSAGE: Probab is " + probability);
-        //Debug.Log("MESSAGE: Random value is " + value);
-        if(probability > value) return true;
+        Debug.Log("MESSAGE: Probab is " + probability);
+        Debug.Log("MESSAGE: Random value is " + value);
+        if(probability > value) 
+            return true;
 
         return false;
     }

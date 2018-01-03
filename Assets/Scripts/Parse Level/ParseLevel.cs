@@ -117,6 +117,10 @@ public class ParseLevel : MonoBehaviour
                     continue;
                 }
 
+                // TODO: Make this turn on and offable
+                //if(neighbourTag == "Air")
+                //    continue;
+
 
                 ArrayList list;
                 if(AlreadyCreated(tag, neighbourTag, out list))
