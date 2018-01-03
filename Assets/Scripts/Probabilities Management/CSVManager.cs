@@ -374,6 +374,6 @@ public class CSVManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        Write();
+      //  Write();
     }
 }

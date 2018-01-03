@@ -1,130 +1,270 @@
 Bottom Layer
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
+M M WL WL WL G G G G G G G G G G 
+M M WL M WL G G G G G G G G G G 
+M M WL M WL G G G G G G G G G G 
+M M WL M WL G G G G G G G G G G 
+M M WL M M G G G G G G G G G G 
+M M WL M M G G G G G G G G G G 
+M M WL M M G G G G G G G G G G 
+M M WL M M G G G G G WL G G G G 
+M M WL M M G G G G G WL G G G G 
+M M G M M G G G WT G WL G G G G 
+M M G M M G G G WT G WL G G G G 
+M M G M WL G G G WT G WL G G G G 
+M M G M WL G WL G WT G WL G G G G 
+M M G M WL G WL G WT G WL G G G G 
+M M G M WL G WL G G G A G G G G 
 
 
 Layer 1
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
+WT G WL WL WL A A WL WL WL WL A A A A 
+G WT WL G WL A WL A A A A A A WL A 
+G G WL G WL A WL A WL WL WL A A A A 
+G G WL G WL A A WL A A A WL WL A A 
+G G WL G G WL A A WL A A A A WL A 
+G G WL G G WL WL A A A A A A A A 
+G G WL G G WL A WL A A A WL A A A 
+G G WL G G A WL WL A WL WL A A WL A 
+G G WL G G A A WL WL WL WL A A A A 
+G G A G G A A WL A A WL A A A A 
+G G A G G A WL WL A A WL A WL A A 
+G G A G WL WL WL A A WL A A A A A 
+G G WL G WL A WL A A A A A A A A 
+G G A G A A WL A A WL WL A A A WL 
+G G A G WL WL WL WL A A A WL A A A 
 
 
 Layer 2
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
+WT A WL WL A A A WL WL WL WL A A A A 
+A A WL WL A A WL A A A A A A WL A 
+WL WL A WL WL A WL A WL WL WL A A A A 
+WL WL WL WL WL A A WL A A A WL WL A A 
+A A WL WL A WL A A WL A A A A WL A 
+A A WL WL WL WL WL A A A A A A A A 
+WL A WL A A WL A A A A A WL A A A 
+WL A WL A A A A WL A A WL A A WL A 
+A A WL A WL A A WL WL WL WL A A A A 
+WL A A A A A A WL A A WL A A A A 
+A WL A A WL A A WL A A WL A WL A A 
+WL WL A WL WL WL WL A A WL A A A A A 
+A WL WL WL A A WL A A A A A A A A 
+A WL A A A A WL A A WL A A A A WL 
+WL A A A WL WL WL WL A A A WL A A A 
 
 
 Layer 3
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
+A A A A A A A WL WL WL WL A A A A 
+A A WL A A A WL A A A A A A WL A 
+A WL A WL WL A WL A WL WL A A A A A 
+WL WL WL WL WL A A A A A A WL WL A A 
+A A WL WL A WL A A WL A A A A WL A 
+A A WL WL WL A WL A A A A A A A A 
+WL A WL A A WL A A A A A WL A A A 
+WL A WL A A A A WL A A WL A A WL A 
+A A WL A WL A A WL WL WL WL A A A A 
+WL A A A A A A WL A A WL A A A A 
+A WL A A WL A A WL A A WL A A A A 
+A WL A WL WL WL WL A A WL A A A A A 
+A WL WL WL A A WL A A A A A A A A 
+A WL A A A A WL A A WL A A A A WL 
+WL A A A WL A A WL A A A WL A A A 
 
 
 Layer 4
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
+A A A A A A A WL WL WL WL A A A A 
+A A WL A A A WL A A A A A A WL A 
+A WL A WL A A WL A WL WL A A A A A 
+WL WL WL WL WL A A A A A A WL WL A A 
+A A WL WL A WL A A WL A A A A WL A 
+A A WL WL WL A WL A A A A A A A A 
+WL A WL A A WL A A A A A WL A A A 
+WL A WL A A A A WL A A WL A A A A 
+A A WL A WL A A WL A A WL A A A A 
+WL A A A A A A A A A WL A A A A 
+A WL A A A A A WL A A WL A A A A 
+A WL A WL WL WL WL A A WL A A A A A 
+A WL WL WL A A WL A A A A A A A A 
+A WL A A A A WL A A A A A A A WL 
+WL A A A WL A A WL A A A WL A A A 
 
 
 Layer 5
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
+A A A A A A A WL WL WL WL A A A A 
+A A WL A A A WL A A A A A A A A 
+A WL A WL A A WL A WL WL A A A A A 
+WL WL WL WL WL A A A A A A WL WL A A 
+A A WL A A WL A A WL A A A A WL A 
+A A WL WL A A WL A A A A A A A A 
+WL A WL A A WL A A A A A WL A A A 
+A A WL A A A A WL A A WL A A A A 
+A A WL A WL A A WL A A WL A A A A 
+WL A A A A A A A A A WL A A A A 
+A A A A A A A A A A WL A A A A 
+A WL A A WL WL A A A A A A A A A 
+A WL WL WL A A WL A A A A A A A A 
+A WL A A A A WL A A A A A A A WL 
+WL A A A WL A A WL A A A A A A A 
 
 
 Layer 6
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
+A A A A A A A WL WL WL WL A A A A 
+A A WL A A A WL A A A A A A A A 
+A WL A WL A A WL A WL WL A A A A A 
+WL WL WL WL A A A A A A A WL WL A A 
+A A WL A A WL A A A A A A A A A 
+A A WL A A A WL A A A A A A A A 
+WL A WL A A WL A A A A A WL A A A 
+A A WL A A A A WL A A WL A A A A 
+A A WL A WL A A WL A A WL A A A A 
+WL A A A A A A A A A WL A A A A 
+A A A A A A A A A A WL A A A A 
+A WL A A WL WL A A A A A A A A A 
+A WL A WL A A WL A A A A A A A A 
+A WL A A A A WL A A A A A A A WL 
+WL A A A WL A A WL A A A A A A A 
 
 
 Layer 7
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
+A A A A A A A WL WL WL WL A A A A 
+A A WL A A A WL A A A A A A A A 
+A A A WL A A WL A WL WL A A A A A 
+WL WL WL A A A A A A A A WL WL A A 
+A A WL A A A A A A A A A A A A 
+A A WL A A A WL A A A A A A A A 
+WL A WL A A WL A A A A A WL A A A 
+A A WL A A A A WL A A WL A A A A 
+A A WL A A A A WL A A A A A A A 
+WL A A A A A A A A A WL A A A A 
+A A A A A A A A A A WL A A A A 
+A WL A A A WL A A A A A A A A A 
+A WL A A A A WL A A A A A A A A 
+A WL A A A A WL A A A A A A A A 
+WL A A A WL A A WL A A A A A A A 
 
 
 Layer 8
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
+A A A A A A A WL WL WL WL A A A A 
+A A WL A A A WL A A A A A A A A 
+A A A WL A A WL A WL A A A A A A 
+WL WL A A A A A A A A A WL WL A A 
+A A WL A A A A A A A A A A A A 
+A A WL A A A WL A A A A A A A A 
+WL A WL A A WL A A A A A WL A A A 
+A A WL A A A A A A A WL A A A A 
+A A WL A A A A WL A A A A A A A 
+WL A A A A A A A A A WL A A A A 
+A A A A A A A A A A WL A A A A 
+A WL A A A WL A A A A A A A A A 
+A WL A A A A WL A A A A A A A A 
+A WL A A A A WL A A A A A A A A 
+WL A A A WL A A WL A A A A A A A 
+
+
+Layer 9
+A A A A A A A A WL WL WL A A A A 
+A A WL A A A WL A A A A A A A A 
+A A A WL A A WL A WL A A A A A A 
+WL A A A A A A A A A A WL WL A A 
+A A WL A A A A A A A A A A A A 
+A A WL A A A WL A A A A A A A A 
+WL A WL A A WL A A A A A A A A A 
+A A WL A A A A A A A WL A A A A 
+A A WL A A A A WL A A A A A A A 
+WL A A A A A A A A A WL A A A A 
+A A A A A A A A A A WL A A A A 
+A A A A A WL A A A A A A A A A 
+A WL A A A A WL A A A A A A A A 
+A WL A A A A A A A A A A A A A 
+A A A A WL A A WL A A A A A A A 
+
+
+Layer 10
+A A A A A A A A A WL WL A A A A 
+A A WL A A A WL A A A A A A A A 
+A A A WL A A A A WL A A A A A A 
+WL A A A A A A A A A A A WL A A 
+A A WL A A A A A A A A A A A A 
+A A WL A A A WL A A A A A A A A 
+WL A WL A A WL A A A A A A A A A 
+A A WL A A A A A A A A A A A A 
+A A WL A A A A WL A A A A A A A 
+WL A A A A A A A A A WL A A A A 
+A A A A A A A A A A WL A A A A 
+A A A A A A A A A A A A A A A 
+A WL A A A A WL A A A A A A A A 
+A WL A A A A A A A A A A A A A 
+A A A A WL A A WL A A A A A A A 
+
+
+Layer 11
+A A A A A A A A A WL WL A A A A 
+A A WL A A A WL A A A A A A A A 
+A A A WL A A A A WL A A A A A A 
+WL A A A A A A A A A A A WL A A 
+A A WL A A A A A A A A A A A A 
+A A WL A A A A A A A A A A A A 
+A A A A A WL A A A A A A A A A 
+A A WL A A A A A A A A A A A A 
+A A A A A A A A A A A A A A A 
+A A A A A A A A A A WL A A A A 
+A A A A A A A A A A WL A A A A 
+A A A A A A A A A A A A A A A 
+A WL A A A A WL A A A A A A A A 
+A WL A A A A A A A A A A A A A 
+A A A A A A A WL A A A A A A A 
+
+
+Layer 12
+A A A A A A A A A WL WL A A A A 
+A A WL A A A WL A A A A A A A A 
+A A A WL A A A A WL A A A A A A 
+WL A A A A A A A A A A A WL A A 
+A A WL A A A A A A A A A A A A 
+A A WL A A A A A A A A A A A A 
+A A A A A A A A A A A A A A A 
+A A WL A A A A A A A A A A A A 
+A A A A A A A A A A A A A A A 
+A A A A A A A A A A WL A A A A 
+A A A A A A A A A A WL A A A A 
+A A A A A A A A A A A A A A A 
+A WL A A A A WL A A A A A A A A 
+A WL A A A A A A A A A A A A A 
+A A A A A A A WL A A A A A A A 
+
+
+Layer 13
+A A A A A A A A A WL WL A A A A 
+A A WL A A A WL A A A A A A A A 
+A A A WL A A A A WL A A A A A A 
+WL A A A A A A A A A A A WL A A 
+A A WL A A A A A A A A A A A A 
+A A WL A A A A A A A A A A A A 
+A A A A A A A A A A A A A A A 
+A A WL A A A A A A A A A A A A 
+A A A A A A A A A A A A A A A 
+A A A A A A A A A A WL A A A A 
+A A A A A A A A A A WL A A A A 
+A A A A A A A A A A A A A A A 
+A WL A A A A A A A A A A A A A 
+A WL A A A A A A A A A A A A A 
+A A A A A A A WL A A A A A A A 
 
 
 Top Layer
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
-A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A A 
+A A A A A A A A A A WL A A A A 
+A A WL A A A WL A A A A A A A A 
+A A A WL A A A A WL A A A A A A 
+WL A A A A A A A A A A A WL A A 
+A A WL A A A A A A A A A A A A 
+A A A A A A A A A A A A A A A 
+A A A A A A A A A A A A A A A 
+A A WL A A A A A A A A A A A A 
+A A A A A A A A A A A A A A A 
+A A A A A A A A A A WL A A A A 
+A A A A A A A A A A WL A A A A 
+A A A A A A A A A A A A A A A 
+A WL A A A A A A A A A A A A A 
+A WL A A A A A A A A A A A A A 
+A A A A A A A A A A A A A A A 
 
 
