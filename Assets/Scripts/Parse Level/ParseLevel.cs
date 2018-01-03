@@ -56,6 +56,8 @@ public class ParseLevel : MonoBehaviour
             CalculateProbabilities();
             parseLevel = false;
 
+            tiles.Clear();
+
             stopwatch.Stop();
             Debug.Log("Time taken to parse level " + stopwatch.Elapsed);
         }

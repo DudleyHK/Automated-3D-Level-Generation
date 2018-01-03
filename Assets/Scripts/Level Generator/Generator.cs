@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class Generator : MonoBehaviour 
 {
+    private enum TileChars
+    {
+        M,
+        G,
+        WT,
+        WL,
+        A
+    }
+
     [SerializeField]
     private List<GameObject> generatedTiles = new List<GameObject>();
     [SerializeField]
@@ -20,6 +29,8 @@ public class Generator : MonoBehaviour
     private GameObject generatedLevelPrefab;
     [SerializeField]
     private CSVManager csvManager;
+    [SerializeField]
+    private TileChars initialTileChar = TileChars.M;
     [SerializeField]
     private string textLevelOutput = "TextLevel.txt";
     [SerializeField]
@@ -57,30 +68,27 @@ public class Generator : MonoBehaviour
         if(runGenerator || Input.GetKeyDown(KeyCode.G))
         {
             textLevel = new List<KeyValuePair<string, List<float>>>();
-            StartCoroutine(Run());
+            StartCoroutine(Run(flag => 
+            {
+                if(flag)
+                    StartCoroutine(Build());
+            }));
             runGenerator = false;
         }
 
         if(Input.GetKeyDown(KeyCode.B))
         {
+            StopAllCoroutines();
             StartCoroutine(Build());
         }
     }
 
 
-    private IEnumerator Run()
+    private IEnumerator Run(System.Action<bool> complete)
     {
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        //var counter = 0;
+        complete(false);
 
-        /* Initialise the Generation Process */
-        // Instantiate the first Tile 
-        //var initialTile = Instantiate(firstBlockPrefab, Vector3.zero, Quaternion.identity);
-
-        // Add the Tile to the list of all generated tiles.
-        // generatedTiles.Add(initialTile);
-
-        /*Being the Main Generation*/
         InitialiseStringLevel();
         GenerateStringLevel();
         PrintTextLevel();
@@ -90,7 +98,7 @@ public class Generator : MonoBehaviour
         stopwatch.Stop();
         Debug.Log("Time taken to generate level " + stopwatch.Elapsed);
 
-
+        complete(true);
         yield return true;
     }
 
@@ -126,7 +134,7 @@ public class Generator : MonoBehaviour
 
                     var clone = Instantiate(tilePrefab, spawnPosition, Quaternion.identity, layer.transform);
 
-                    generatedTiles.Add(clone);
+                    //generatedTiles.Add(clone);
                 }
                 spawnPosition.z += tileSize.z;
                 spawnPosition.x = initialPosition.x;
@@ -176,7 +184,7 @@ public class Generator : MonoBehaviour
                     var index3D = index2D * maxWidth + k;
 
                     if(index3D == 0)
-                        AddTextTile("M", index3D, "Forward");
+                        AddTextTile(initialTileChar.ToString(), index3D);
 
                     WriteTextLevel(index3D);
                     
@@ -294,7 +302,7 @@ public class Generator : MonoBehaviour
     /// </summary>
     /// <param name="tileChar"></param>
     /// <param name="direction"></param>
-    private void AddTextTile(string tileChar, int index, string direction)
+    private void AddTextTile(string tileChar, int index, string direction = "None")
     {
         var probabilitiesList = default(List<float>);
 
@@ -550,7 +558,7 @@ public class Generator : MonoBehaviour
 
         if(!SanityCheckIndex(nextIndex))
         {
-            Debug.Log("INVALID: NextIndex is invalid");
+           // Debug.Log("INVALID: NextIndex is invalid");
             return -1;
         }
 
@@ -671,13 +679,13 @@ public class Generator : MonoBehaviour
 
         if(index >= (maxWidth * maxHeight * maxDepth))
         {
-            Debug.Log("ERROR: Index is more than array size");
+            //Debug.Log("ERROR: Index is more than array size");
             return false;
         }
 
         if(index < 0)
         {
-            Debug.Log("ERROR: Index is less than zero");
+            //Debug.Log("ERROR: Index is less than zero");
             return false;
         }
 
