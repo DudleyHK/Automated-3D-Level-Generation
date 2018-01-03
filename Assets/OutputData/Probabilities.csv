@@ -1,0 +1,16 @@
+,Mud,Grass,Water,Wall,Air
+Mud Right,0.5,0,0,0,0.5
+Mud Up,0,1,0,0,0
+Mud Forward,0.5,0,0,0,0.5
+Grass Right,0,0.5,0,0,0.5
+Grass Up,0,0,0,0,1
+Grass Forward,0,0.5,0,0,0.5
+Water Right,NaN,NaN,NaN,NaN,NaN
+Water Up,NaN,NaN,NaN,NaN,NaN
+Water Forward,NaN,NaN,NaN,NaN,NaN
+Wall Right,NaN,NaN,NaN,NaN,NaN
+Wall Up,NaN,NaN,NaN,NaN,NaN
+Wall Forward,NaN,NaN,NaN,NaN,NaN
+Air Right,NaN,NaN,NaN,NaN,NaN
+Air Up,NaN,NaN,NaN,NaN,NaN
+Air Forward,NaN,NaN,NaN,NaN,NaN

@@ -1,10 +1,10 @@
 Bottom Layer
-M G A 
-A WL G 
+M M M 
+A G G 
 
 
 Top Layer
-G A M 
-WA M A 
+G G G 
+A A A 
 
 

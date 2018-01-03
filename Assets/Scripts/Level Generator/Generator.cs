@@ -9,7 +9,7 @@ public class Generator : MonoBehaviour
     [SerializeField]
     private List<GameObject> tilePrefabs = new List<GameObject>();
     [SerializeField]
-    private List<string> textLevel;
+    private List<KeyValuePair<string, List<float>>> textLevel;
     [SerializeField]
     private List<Material> materials = new List<Material>();
     [SerializeField]
@@ -46,15 +46,23 @@ public class Generator : MonoBehaviour
         }
 
         // TODO: Change from predefined to generated
-        textLevel = new List<string>(new string[] 
-        { 
-            "M", "G",  "A", 
-            "A", "WL", "G", 
-            
-            "G", "A", "M", 
-            "WA", "M", "A" 
-        });
-        // textLevel = new List<string>(new string[] { "M", "G", "A", "A", "WL", "G", "G", "A", "M", "WA", "M", "A" });
+        //textLevel = new List<KeyValuePair<string, List<float>>>()
+        //{
+        //    new KeyValuePair<string, List<float>>("M", new List<float>()),
+        //    new KeyValuePair<string, List<float>>("G", new List<float>() ),
+        //    new KeyValuePair<string, List<float>>("A", new List<float>() ),
+        //    new KeyValuePair<string, List<float>>("A", new List<float>() ),
+        //    new KeyValuePair<string, List<float>>("WL", new List<float>()),
+        //    new KeyValuePair<string, List<float>>("G", new List<float>() ),
+        //    new KeyValuePair<string, List<float>>("G", new List<float>() ),
+        //    new KeyValuePair<string, List<float>>("A", new List<float>() ),
+        //    new KeyValuePair<string, List<float>>("M", new List<float>() ),
+        //    new KeyValuePair<string, List<float>>("WA", new List<float>()),
+        //    new KeyValuePair<string, List<float>>("M", new List<float>() ),
+        //    new KeyValuePair<string, List<float>>("A", new List<float>() )
+        //};
+
+        textLevel = new List<KeyValuePair<string, List<float>>>();
     }
 
 
@@ -81,12 +89,31 @@ public class Generator : MonoBehaviour
         // generatedTiles.Add(initialTile);
 
         /*Being the Main Generation*/
+        InitialiseStringLevel();
         GenerateStringLevel();
         PrintTextLevel();
 
          
         yield return true;
     }
+    private void InitialiseStringLevel()
+    {
+        /*Being the Main Generation Loop*/
+        for(int i = 0; i < maxHeight; i++)
+        {
+            for(int j = 0; j < maxDepth; j++)
+            {
+                var index2D = (i * maxHeight + j);
+
+                for(int k = 0; k < maxWidth; k++)
+                {
+                    var index3D = index2D * maxWidth + k;
+                    textLevel.Add(new KeyValuePair<string, List<float>>("*", null));
+                }
+            }
+        }
+    }
+
 
     /// <summary>
     /// The way index is taken is shuffled due to using maxHeight where most people use width. 
@@ -103,26 +130,13 @@ public class Generator : MonoBehaviour
                 for(int k = 0; k < maxWidth; k++)
                 {
                     var index3D = index2D * maxWidth + k;
-                    //Debug.Log("MESSAGE: 3D Grid Index is " + index3D);
 
-                    var upIndex      = GetGridUp(index3D);
-                    var forwardIndex = GetGridForward(index3D);
-                    var rightIndex   = GetGridRight(index3D);
+                    if(index3D == 0)
+                        AddTextTile("M", index3D, "Forward");
 
-                    Debug.Log("Index " + index3D + " tile " + textLevel[index3D]);
+                    WriteTextLevel(index3D);
+                    
 
-                    if(rightIndex >= 0)
-                    {
-                        Debug.Log("Right tile " + textLevel[rightIndex]);
-                    }
-                    if(upIndex >= 0)
-                    {
-                        Debug.Log("Up tile " + textLevel[upIndex]);
-                    }
-                    if(forwardIndex >= 0)
-                    {
-                        Debug.Log("Forward tile " + textLevel[forwardIndex]);
-                    }
 
 
 
@@ -131,7 +145,6 @@ public class Generator : MonoBehaviour
 
                     ///var tile = generatedTiles[counter];
                     ///var type = tile.tag;
-
                     ///foreach(var direction in directions)
                     ///{
                     ///    ///var rowID = type.ToString() + " " + direction.ToString();
@@ -185,6 +198,223 @@ public class Generator : MonoBehaviour
         }
     }
 
+
+    private void WriteTextLevel(int index3D)
+    {
+        var standardProbabilities = default(List<float>);
+        var tileChar = textLevel[index3D].Key;
+        var direction = "None";
+        var tileType = "None";
+
+        var upIndex = GetGridUp(index3D);
+        var forwardIndex = GetGridForward(index3D);
+        var rightIndex = GetGridRight(index3D);
+
+
+        if(rightIndex >= 0)
+        {
+            direction = "Right";
+            tileType = ConvertToType(tileChar) + " " + direction;
+            standardProbabilities = csvManager.ProbabiltiesOfRow(tileType);
+            tileChar = NextTextTile(standardProbabilities);
+            AddTextTile(tileChar, rightIndex, direction);
+        }
+        if(upIndex >= 0)
+        {
+            direction = "Up";
+            tileType = ConvertToType(tileChar) + " " + direction;
+            standardProbabilities = csvManager.ProbabiltiesOfRow(tileType);
+            tileChar = NextTextTile(standardProbabilities);
+            AddTextTile(tileChar, upIndex, direction);
+        }
+        if(forwardIndex >= 0)
+        {
+            direction = "Forward";
+            tileType = ConvertToType(tileChar) + " " + direction;
+            standardProbabilities = csvManager.ProbabiltiesOfRow(tileType);
+            tileChar = NextTextTile(standardProbabilities);
+            AddTextTile(tileChar, forwardIndex, direction);
+        }
+    }
+
+    // TODO: Update the tileChar after the 
+    /// <summary>
+    /// Adds a new text tile to the list. If space being added to is already occupied 
+    /// this function will update the transition matrix for that space.
+    /// </summary>
+    /// <param name="tileChar"></param>
+    /// <param name="direction"></param>
+    private void AddTextTile(string tileChar, int index, string direction)
+    {
+        var probabilitiesList = default(List<float>);
+
+        if(textLevel[index].Key != "*")
+        {
+            // Update the probabilities matrix for the tile. 
+            var tileType = ConvertToType(tileChar) + " " + direction;
+            probabilitiesList = csvManager.ProbabiltiesOfRow(tileType);
+
+            if(probabilitiesList == null)
+            {
+                Debug.Log("ERROR: Probabilities has returned null");
+                return;
+            }
+
+            Debug.Log("MESSAGE: Updating the probabilty list of index " + index);
+            Debug.Log("TODO: Update the tileChar after the probablist has been updated");
+            for(int i = 0; i < textLevel[index].Value.Count; i++)
+            {
+                var value = textLevel[index].Value[i];
+                var probabilty = probabilitiesList[i];
+
+                if(probabilty == float.NaN || value == float.NaN)
+                {
+                    continue;
+                }
+                else if(value == 0 && probabilty == 0)
+                {
+                    continue;
+                }
+                else if(value > 0 && probabilty == 0)
+                {
+                    continue;
+                }
+                else if(value == 0 && probabilty > 0)
+                {
+                    value = probabilty;
+                }
+                else
+                {
+                    value *= probabilty;
+                }
+
+                probabilitiesList[i] = value;
+            }
+        }
+        // Set a basic probabilties matrix for the tile. 
+        else
+        {
+            if(direction != "None")
+            {
+                var tileType = ConvertToType(tileChar) + " " + direction;
+                probabilitiesList = csvManager.ProbabiltiesOfRow(tileType);
+
+                if(probabilitiesList == null)
+                {
+                    Debug.Log("ERROR: Probabilities has returned null");
+                    return;
+                }
+            }
+            else
+            {
+                Debug.Log("MESSAGE: TextTile is being initialised without a direction");
+                probabilitiesList = null;
+            }
+
+            textLevel[index] = new KeyValuePair<string, List<float>>(tileChar, probabilitiesList);
+        }
+    }
+
+    /// <summary>
+    /// Pass in a list of probabilities and return a Tile Character.
+    /// </summary>
+    /// <param name="probabilties"></param>
+    /// <returns></returns>
+    private string NextTextTile(List<float> probabilities)
+    {
+        var index = GetIndexOfProbability(probabilities);
+        var type = csvManager.NameOfColumn(index);
+        var tileChar = ConvertToChar(type);
+
+        return tileChar;
+    }
+
+    private int GetIndexOfProbability(List<float> probabilities)
+    {
+        int index = -1;
+        //bool complete = false;
+
+       while(true)
+        {
+            break;
+        }
+
+       // index = 0;
+       //
+       //     index++;
+       //
+       //     complete = FlipCoin(probab);
+       //     if(complete)
+       //         break;
+       // }
+        return index;
+    }
+
+    private string ConvertToType(string tileChar)
+    {
+        var type = "";
+        
+        if(tileChar == "M")
+        {
+            type = "Mud";
+        }
+        else if(tileChar == "G")
+        {
+            type = "Grass";
+        }
+        else if(tileChar == "WT")
+        {
+            type = "Water";
+        }
+        else if(tileChar == "WL")
+        {
+            type = "Wall";
+        }
+        else if(tileChar == "A")
+        {
+            type = "Air";
+        }
+        else
+        {
+            Debug.Log("ERROR: Invalid tileChar passed to type converter");
+        }
+        
+        return type;
+    }
+
+    private string ConvertToChar(string type)
+    {
+        var tileChar = "";
+
+        if(type == "Mud")
+        {
+            tileChar = "M";
+        }
+        else if(type == "Grass")
+        {
+            tileChar = "G";
+        }
+        else if(type == "Water")
+        {
+            tileChar = "WT";
+        }
+        else if(type == "Wall")
+        {
+            tileChar = "WL";
+        }
+        else if(type == "Air")
+        {
+            tileChar = "A";
+        }
+        else
+        {
+            Debug.Log("ERROR: Invalid type passed to tileChar converter");
+        }
+
+        return tileChar;
+    }
+
+
     /// <summary>
     /// Print the textLevel to a text file. 
     /// </summary>
@@ -217,7 +447,7 @@ public class Generator : MonoBehaviour
                 for(int k = 0; k < maxWidth; k++)
                 {
                     var index3D = index2D * maxWidth + k;
-                    var tile = textLevel[index3D];
+                    var tile = textLevel[index3D].Key;
 
                     layerString += tile;
                     layerString += " ";
@@ -228,6 +458,29 @@ public class Generator : MonoBehaviour
         }
 
         streamWriter.Close();
+    }
+
+
+    private void ReadTextLevel(int index3D)
+    {
+        var upIndex = GetGridUp(index3D);
+        var forwardIndex = GetGridForward(index3D);
+        var rightIndex = GetGridRight(index3D);
+
+        Debug.Log("Index " + index3D + " tile " + textLevel[index3D].Key);
+
+        if(rightIndex >= 0)
+        {
+            Debug.Log("Right tile " + textLevel[rightIndex].Key);
+        }
+        if(upIndex >= 0)
+        {
+            Debug.Log("Up tile " + textLevel[upIndex].Key);
+        }
+        if(forwardIndex >= 0)
+        {
+            Debug.Log("Forward tile " + textLevel[forwardIndex].Key);
+        }
     }
 
 
@@ -333,7 +586,6 @@ public class Generator : MonoBehaviour
         {
             return false;
         }
-
 
         for(int i = 0; i < maxHeight; i++)
         {
