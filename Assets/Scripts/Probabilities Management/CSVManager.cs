@@ -282,10 +282,18 @@ public class CSVManager : MonoBehaviour
 
     private void Write()
     {
-        WriteTotals();
-        WriteProbabilities();
+        if(Totals.Count > 0)
+        {
+            WriteTotals();
+            Debug.Log("MESSAGE: CSVManager Written Totals");
+        }
 
-        Debug.Log("MESSAGE: CSVManager Written Level");
+        if(Probabilities.Count > 0)
+        {
+            WriteProbabilities();
+            Debug.Log("MESSAGE: CSVManager Written Probabilities");
+        }
+
     }
 
 

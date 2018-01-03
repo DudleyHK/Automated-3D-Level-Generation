@@ -15,6 +15,10 @@ public class Generator : MonoBehaviour
     [SerializeField]
     private GameObject firstBlockPrefab;
     [SerializeField]
+    private GameObject layerPrefab;
+    [SerializeField]
+    private GameObject generatedLevelPrefab;
+    [SerializeField]
     private CSVManager csvManager;
     [SerializeField]
     private string textLevelOutput = "TextLevel.txt";
@@ -44,26 +48,6 @@ public class Generator : MonoBehaviour
         {
             Debug.Log("ERROR: TilePrefabs list in GeneratorManager is empty. This list must be full to generate a tile map.");
         }
-
- ////       TODO:
- ////       Change from predefined to generated
- ////textLevel = new List<KeyValuePair<string, List<float>>>()
- ////{
- ////           new KeyValuePair<string, List<float>>("M", new List<float>()),
- ////           new KeyValuePair<string, List<float>>("G", new List<float>() ),
- ////           new KeyValuePair<string, List<float>>("A", new List<float>() ),
- ////           new KeyValuePair<string, List<float>>("A", new List<float>() ),
- ////           new KeyValuePair<string, List<float>>("WL", new List<float>()),
- ////           new KeyValuePair<string, List<float>>("G", new List<float>() ),
- ////           new KeyValuePair<string, List<float>>("G", new List<float>() ),
- ////           new KeyValuePair<string, List<float>>("A", new List<float>() ),
- ////           new KeyValuePair<string, List<float>>("M", new List<float>() ),
- ////           new KeyValuePair<string, List<float>>("WA", new List<float>()),
- ////           new KeyValuePair<string, List<float>>("M", new List<float>() ),
- ////           new KeyValuePair<string, List<float>>("A", new List<float>() )
- ////};
-
-        textLevel = new List<KeyValuePair<string, List<float>>>();
     }
 
 
@@ -72,6 +56,7 @@ public class Generator : MonoBehaviour
     {
         if(runGenerator || Input.GetKeyDown(KeyCode.G))
         {
+            textLevel = new List<KeyValuePair<string, List<float>>>();
             StartCoroutine(Run());
             runGenerator = false;
         }
@@ -113,20 +98,23 @@ public class Generator : MonoBehaviour
     private IEnumerator Build()
     {
         var tileSize = tilePrefabs[0].GetComponent<Renderer>().bounds.size;
-        var initialPosition = Vector3.zero;
+        var initialPosition = tilePrefabs[0].GetComponent<Renderer>().bounds.center;
         var spawnPosition = Vector3.zero;
+
+        var generatedLevelClone = Instantiate(generatedLevelPrefab, initialPosition, Quaternion.identity);
 
         for(int i = 0; i < maxHeight; i++)
         {
+            var layer = Instantiate(layerPrefab, initialPosition, Quaternion.identity, generatedLevelClone.transform);
             for(int j = 0; j < maxDepth; j++)
             {
                 for(int k = 0; k < maxWidth; k++)
                 {
                     var index = (i * maxHeight + j) * maxWidth + k;
 
-                    if(index == 0)
+                    if(index % maxWidth == 0)
                     {
-                        spawnPosition = initialPosition;
+                        spawnPosition.x = initialPosition.x;
                     }
                     else
                     {
@@ -136,19 +124,22 @@ public class Generator : MonoBehaviour
                     var type = ConvertToType(textLevel[index].Key);
                     var tilePrefab = TilePrefab(type);
 
-                    var clone = Instantiate(tilePrefab, spawnPosition, Quaternion.identity);
+                    var clone = Instantiate(tilePrefab, spawnPosition, Quaternion.identity, layer.transform);
 
                     generatedTiles.Add(clone);
                 }
                 spawnPosition.z += tileSize.z;
-                spawnPosition.x = 0;
+                spawnPosition.x = initialPosition.x;
             }
             spawnPosition.y += tileSize.y;
-            spawnPosition.z = 0;
+            spawnPosition.z = initialPosition.z;
         }
         yield return true;
     }
 
+    /// <summary>
+    /// Initialise all positions to '*'
+    /// </summary>
     private void InitialiseStringLevel()
     {
         /*Being the Main Generation Loop*/
@@ -272,7 +263,7 @@ public class Generator : MonoBehaviour
             var newTileChar = NextTextTile(standardProbabilities);
             AddTextTile(newTileChar, rightIndex, direction);
 
-            Debug.Log("MESSAGE: Adding a tile " + tileChar + " ," + tileType);
+            //Debug.Log("MESSAGE: Adding a tile " + tileChar + " ," + tileType);
         }
         if(upIndex >= 0)
         {
@@ -282,7 +273,7 @@ public class Generator : MonoBehaviour
             var newTileChar = NextTextTile(standardProbabilities);
             AddTextTile(newTileChar, upIndex, direction);
 
-            Debug.Log("MESSAGE: Adding a tile " + tileChar + " ," + tileType);
+            //Debug.Log("MESSAGE: Adding a tile " + tileChar + " ," + tileType);
         }
         if(forwardIndex >= 0)
         {
@@ -292,7 +283,7 @@ public class Generator : MonoBehaviour
             var newTileChar = NextTextTile(standardProbabilities);
             AddTextTile(newTileChar, forwardIndex, direction);
 
-            Debug.Log("MESSAGE: Adding a tile " + tileChar + " ," + tileType);
+            //Debug.Log("MESSAGE: Adding a tile " + tileChar + " ," + tileType);
         }
     }
 
@@ -319,8 +310,7 @@ public class Generator : MonoBehaviour
                 return;
             }
 
-            Debug.Log("MESSAGE: Updating the probabilty list of index " + index + "(tileChar "  + tileChar + ")");
-            Debug.Log("TODO: Update the tileChar after the probablist has been updated");
+            //Debug.Log("MESSAGE: Updating the probabilty list of index " + index + "(tileChar "  + tileChar + ")");
             for(int i = 0; i < textLevel[index].Value.Count; i++)
             {
                 var value = textLevel[index].Value[i];
@@ -351,7 +341,7 @@ public class Generator : MonoBehaviour
             }
 
             tileChar = NextTextTile(textLevel[index].Value);
-            Debug.Log("MESSAGE: Updating to " + tileChar);
+            //Debug.Log("MESSAGE: Updating to " + tileChar);
         }
         // Set a basic probabilties matrix for the tile. 
         else
@@ -369,7 +359,7 @@ public class Generator : MonoBehaviour
             }
             else
             {
-                Debug.Log("MESSAGE: TextTile is being initialised without a direction");
+                //Debug.Log("MESSAGE: TextTile is being initialised without a direction");
                 probabilitiesList = null;
             }
 
@@ -390,7 +380,7 @@ public class Generator : MonoBehaviour
         var type = csvManager.NameOfColumn(index);
         var tileChar = ConvertToChar(type);
 
-        Debug.Log("Index " + index + " gets tileChar " + type);
+        //Debug.Log("Index " + index + " gets tileChar " + type);
 
 
 
@@ -404,8 +394,6 @@ public class Generator : MonoBehaviour
         
         while(counter < 100)
         {
-            Debug.Log("Counter " + counter);
-
             if(listID >= probabilities.Count)
                 listID = 0;
 
@@ -490,7 +478,7 @@ public class Generator : MonoBehaviour
     private void PrintTextLevel()
     {
         System.IO.StreamWriter streamWriter = new System.IO.StreamWriter(Application.dataPath + "/OutputData/" + textLevelOutput);
-        Debug.Log("MESSAGE: " + Application.dataPath + "/OutputData/" + textLevelOutput);
+       // Debug.Log("MESSAGE: " + Application.dataPath + "/OutputData/" + textLevelOutput);
 
         streamWriter.Flush();
         for(int i = 0; i < maxHeight; i++)
@@ -780,8 +768,8 @@ public class Generator : MonoBehaviour
         if(probability == float.NaN) return false;
 
         var value = Random.Range(0f, 1f);
-        Debug.Log("MESSAGE: Probab is " + probability);
-        Debug.Log("MESSAGE: Random value is " + value);
+        //Debug.Log("MESSAGE: Probab is " + probability);
+        //Debug.Log("MESSAGE: Random value is " + value);
         if(probability > value) 
             return true;
 

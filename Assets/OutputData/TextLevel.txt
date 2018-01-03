@@ -1,75 +1,75 @@
 Bottom Layer
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
+M A WL A WL WL A WL A WL A WL 
+M WL A WL A A WL A WL A WL M 
+M M WL M A A M WL G A A M 
+A WL M M WL A A M M WL WL M 
+A A M A A A WL M A A M M 
+A A M A A WL A M WL WL M M 
+WL A A A WL A WL M A A G A 
+A WL A WL A WL M A A WL WT WL 
+A M A A WL M A A A A M M 
+A M WL A A A WL A WL A A M 
+WT M A A WL WL A A A A A A 
+A M A A A A A A WL WL A WL 
 
 
 Layer 1
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-G G G G G G G G G G G G 
-G WT G G G G G G G G G G 
-G G G G G G G G G G G G 
-G G G G G G G G G M G WT 
-M G G G G G G G M G G WT 
+A A M A A WL A M WL WL M M 
+WL A A A WL A WL M A A G A 
+A WL A WL A WL M A A WL WT WL 
+A M A A WL M A A A A M M 
+A M WL A A A WL A WL A A M 
+WT M A A WL WL A A A A A A 
+A M A A A A A A WL WL A WL 
+M A A A WL A A WL A A A A 
+A A A A A A A A WL A A WT 
+A M A M A A A A G A A A 
+A WL M A A A A A A A A M 
+WL A A A A WL A A A A A M 
 
 
 Layer 2
-M M M M M M M M M M M M 
-M M M M M M M M M M M M 
-G G G G G G G G G G G G 
-G WT G G G G G G G G G G 
-G G G G G G G G G G G G 
-G G G G G G G G G M G WT 
-M G G G G G G G M G G WT 
-G G G G G G G G G G G G 
-G G G G M G G G G G G G 
-G G G G G G G G G G G G 
-G G G G G G G G G G G G 
-G WT G G M G G G G G G G 
+WT M A A WL WL A A A A A A 
+A M A A A A A A WL WL A WL 
+M A A A WL A A WL A A A A 
+A A A A A A A A WL A A WT 
+A M A M A A A A G A A A 
+A WL M A A A A A A A A M 
+WL A A A A WL A A A A A M 
+A A M A A A WL M WL A A A 
+A A A A WL WL A A A A WT A 
+A A A WL A WL A A A A A WL 
+A M A A WL M A A A A A M 
+A A A A A A WL A A A A M 
 
 
 Layer 3
-G G G G G G G G G M G WT 
-M G G G G G G G M G G WT 
-G G G G G G G G G G G G 
-G G G G M G G G G G G G 
-G G G G G G G G G G G G 
-G G G G G G G G G G G G 
-G WT G G M G G G G G G G 
-G G G G G G G G G G G G 
-G G G G G G G G G G G G 
-WL WL WL WL WL WL WL WL WL WL WL WL 
-M WT WL WL WL WL WL WL M WL WL WL 
-M WL WL WL WL M WL WL WL M WL WL 
+A WL M A A A A A A A A M 
+WL A A A A WL A A A A A M 
+A A M A A A WL M WL A A A 
+A A A A WL WL A A A A WT A 
+A A A WL A WL A A A A A WL 
+A M A A WL M A A A A A M 
+A A A A A A WL A A A A M 
+WT A A A A WL A WL A WL A A 
+A A A A A A A A WL WL A A 
+A A A A WL A A WL A A A A 
+A A A A A A A A WL WL A A 
+A A WL WT A A A A WT A A A 
 
 
 Top Layer
-G G G G G G G G G G G G 
-G WT G G M G G G G G G G 
-G G G G G G G G G G G G 
-G G G G G G G G G G G G 
-WL WL WL WL WL WL WL WL WL WL WL WL 
-M WT WL WL WL WL WL WL M WL WL WL 
-M WL WL WL WL M WL WL WL M WL WL 
-M WL M WL WL WL WL WL WL G WL WT 
-G M WL M WL M WL WL G WL WL WT 
-M WL WL WL WL WL WL WL WL WL M M 
-WL WL WL WL G WL M WL M M WL WL 
-M WL WL M WL WL WL WL WL WL WL WL 
+A M A A WL M A A A A A M 
+A A A A A A WL A A A A M 
+WT A A A A WL A WL A WL A A 
+A A A A A A A A WL WL A A 
+A A A A WL A A WL A A A A 
+A A A A A A A A WL WL A A 
+A A WL WT A A A A WT A A A 
+A WL A A A A A A A A A M 
+A A WL A A WL A A A A A A 
+A A A A A A A A A A A A 
+A A WL A WL A A A A A A A 
+A A A A A A A A A WL A A 
 
 

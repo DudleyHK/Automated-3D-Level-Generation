@@ -81,9 +81,11 @@ public class ParseLevel : MonoBehaviour
         }
 
         int idx = 0;
-        foreach(Transform child in level.transform)
+
+        foreach(var renderer in level.GetComponentsInChildren<Renderer>())
         {
-            tiles.Add(child.gameObject);
+            var child = renderer.gameObject;
+            tiles.Add(child);
 
             if(child.transform.position.x < startPosition.x &&
                child.transform.position.y < startPosition.y &&
@@ -94,6 +96,20 @@ public class ParseLevel : MonoBehaviour
             }
             idx++;
         }
+
+        //foreach(Transform child in level.transform)
+        //{
+        //    tiles.Add(child.gameObject);
+        //
+        //    if(child.transform.position.x < startPosition.x &&
+        //       child.transform.position.y < startPosition.y &&
+        //       child.transform.position.z < startPosition.z)
+        //    {
+        //        startPosition = child.transform.position;
+        //        startIdx = idx;
+        //    }
+        //    idx++;
+        //}
     }
 
     /// <summary>
