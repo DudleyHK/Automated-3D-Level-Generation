@@ -51,7 +51,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     private void UpdateTransitionMatrix()
     {
-        var probabilities = csvManager.ProbabiltiesOfRow(currentParent);
+        var probabilities = csvManager.RowProbabilities(currentParent);
 
         if(parents.Count == 1)
         {

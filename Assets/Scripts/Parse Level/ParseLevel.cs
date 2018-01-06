@@ -12,7 +12,7 @@ public enum Directions
 
 public class ParseLevel : MonoBehaviour
 {
-
+    public GameObject debug_originObject;
 
     [SerializeField]
     private GameObject level;
@@ -33,34 +33,62 @@ public class ParseLevel : MonoBehaviour
     private int startIdx = -1;
     [SerializeField]
     private bool parseLevel = false;
-    [SerializeField]
-    private Material complete;
-    //[SerializeField]
-    //private float parseTime = 0f;
+  
 
     private CSVManager csvManager;
 
-    public GameObject debug_originObject;
+    
 
+
+    private void OnEnable()
+    {
+        GUIManager.parseEvent += ParseWithLevel;
+    }
+
+
+    private void OnDisable()
+    {
+        GUIManager.parseEvent -= ParseWithLevel;
+    }
+
+
+
+    private void ParseWithLevel(GameObject level)
+    {
+        if(!level)
+        {
+            Debug.Log("ERROR: Level passed in is null");
+            return;
+        }
+
+        this.level = level;
+        Parse();
+    }
 
 
     private void Update()
     {
         if(parseLevel || Input.GetKeyDown(KeyCode.P))
         {
-            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-
-            Init();
-            Run();
-            OutputResult();
-            CalculateProbabilities();
-            parseLevel = false;
-
-            tiles.Clear();
-
-            stopwatch.Stop();
-            Debug.Log("Time taken to parse level " + stopwatch.Elapsed);
+           Parse();
         }
+    }
+
+    private void Parse()
+    {
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+        Init();
+        Run();
+        OutputResult();
+        CalculateProbabilities();
+        csvManager.Write();
+        parseLevel = false;
+
+        tiles.Clear();
+
+        stopwatch.Stop();
+        Debug.Log("Time taken to parse and write level " + stopwatch.Elapsed);
     }
 
     /// <summary>
@@ -98,20 +126,8 @@ public class ParseLevel : MonoBehaviour
             }
             idx++;
         }
-
-        //foreach(Transform child in level.transform)
-        //{
-        //    tiles.Add(child.gameObject);
-        //
-        //    if(child.transform.position.x < startPosition.x &&
-        //       child.transform.position.y < startPosition.y &&
-        //       child.transform.position.z < startPosition.z)
-        //    {
-        //        startPosition = child.transform.position;
-        //        startIdx = idx;
-        //    }
-        //    idx++;
-        //}
+        
+       
     }
 
     /// <summary>
@@ -119,11 +135,19 @@ public class ParseLevel : MonoBehaviour
     /// </summary>
     public void Run()
     {
+       outputData = new List<ArrayList>();
+
         foreach(var tile in tiles)
         {
             var centre = Centre(tile.GetComponent<Renderer>());
             foreach(var direction in directions)
             {
+                if(tile.tag == "Untagged")
+                {
+                    Debug.Log("ERROR: Tile " + tile.name + " " + tile.tag);
+                    continue;
+                }
+
                 var tag = tile.tag + " " + direction.ToString();
 
                 var dir = GetDirectionVector(direction);
@@ -143,7 +167,7 @@ public class ParseLevel : MonoBehaviour
                 ArrayList list;
                 if(AlreadyCreated(tag, neighbourTag, out list))
                 {
-                    var value = (float)list[2];
+                    var value = (int)list[2];
                     value++;
 
                     list[2] = value;
@@ -155,13 +179,13 @@ public class ParseLevel : MonoBehaviour
                     ArrayList newList = new ArrayList(3);
                     newList.Add(tag);
                     newList.Add(neighbourTag);
-                    newList.Add(1f);
+                    newList.Add(1);
 
                     outputData.Add(newList);
                     //  outputData.Add(new ArrayList { tag, neighbourTag, 1});
                     //Debug.Log("MESSAGE: From " + newList[0] + " to " + newList[1] + " are being added to outputData with data of " + newList[2]);
                 }
-                // DebugDrawLines(direction, centre, dir);
+                DebugDrawLines(direction, centre, dir);
             }
             //var debugObj = Instantiate(debug_originObject, centre, Quaternion.identity);
         }
@@ -191,33 +215,18 @@ public class ParseLevel : MonoBehaviour
         csvManager.SetTotalsValues(outputData);
     }
 
-    // TODO: Make this in a way which doesn't need any of the CSV variables.
+    /// <summary>
+    /// Run the calculation the probability for each.
+    /// </summary>
     private void CalculateProbabilities()
     {
-        var probsList = new List<float>();
+        var rowTotals = csvManager.GetRowTotals();
 
-        for(var i = 0; i < csvManager.Rows; i++)
+        for(int i = 0; i < rowTotals.Count; i++)
         {
-            var rowTotals = csvManager.RowTotal(i);
-            if(rowTotals < 0) continue;
-
-            probsList.Add(rowTotals);
-            //Debug.Log("Total of row " + i + " is " + rowTotals);
+            var total = rowTotals[i];
+            csvManager.SetProbabilityValue(i, total);
         }
-
-        int probsID = 0;
-        for(var i = 0; i < csvManager.Probabilities.Count; i++)
-        {
-            if(i % (csvManager.Columns - 1) == 0 && i > 0)
-            {
-                //Debug.Log("new line at i " + i);
-                probsID++;
-            }
-
-            csvManager.Probabilities[i] = csvManager.Totals[i] / probsList[probsID];
-            //Debug.Log("Probablity value of " + i + " is " + (csvManager.Probabilities[i]));
-        }
-
     }
 
     private Vector3 GetDirectionVector(Directions dir)

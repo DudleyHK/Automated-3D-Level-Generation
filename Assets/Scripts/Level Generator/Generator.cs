@@ -12,7 +12,8 @@ public class Generator : MonoBehaviour
         WL,
         A
     }
-
+    [SerializeField]
+    private List<GameObject> generatedLevels = new List<GameObject>();
     [SerializeField]
     private List<GameObject> generatedTiles = new List<GameObject>();
     [SerializeField]
@@ -42,10 +43,67 @@ public class Generator : MonoBehaviour
     [SerializeField]
     private bool runGenerator = false;
 
+    public static int Height;
+    public static int Width;
+    public static int Depth;
+
 
 
     private List<Directions> directions = new List<Directions>(new Directions[] { Directions.Right, Directions.Forward });
 
+
+    private void OnEnable()
+    {
+        GUIManager.typeSliderEvent += ChangeInitialTile;
+        GUIManager.dimentionEvent += ChangeDimentions;
+        GUIManager.generateEvent += Generate;
+        GUIManager.changeLevelDisplay += DeactivateLastLevel;
+    }
+
+    private void OnDisable()
+    {
+        GUIManager.typeSliderEvent -= ChangeInitialTile;
+        GUIManager.dimentionEvent -= ChangeDimentions;
+        GUIManager.generateEvent -= Generate;
+        GUIManager.changeLevelDisplay -= DeactivateLastLevel;
+    }
+
+
+
+    private string ChangeInitialTile(int value)
+    {
+        if(!System.Enum.IsDefined(typeof(TileChars), (TileChars)value)) 
+            return "ERROR: Invalid value parsed";
+
+        initialTileChar = ((TileChars)value);
+        var type = ConvertToType(((TileChars)value).ToString());
+
+
+        return type;
+    }
+
+
+    private void ChangeDimentions(string axis, int value)
+    {
+        if(value == 0) value = 1;
+
+        if(axis == "Height")
+        {
+            maxHeight = value;
+        }
+        else if (axis == "Width")
+        {
+            maxWidth = value;
+        }
+        else if(axis == "Depth")
+        {
+            maxDepth = value;
+        }
+        else
+        {
+            Debug.Log("ERROR: Invalid axis " + axis + " passed");
+        }
+    }
 
 
 
@@ -65,15 +123,14 @@ public class Generator : MonoBehaviour
 
     private void Update()
     {
+        Height = maxHeight;
+        Width  = maxWidth;
+        Depth  = maxDepth;
+
+
         if(runGenerator || Input.GetKeyDown(KeyCode.G))
         {
-            textLevel = new List<KeyValuePair<string, List<float>>>();
-            StartCoroutine(Run(flag => 
-            {
-                if(flag)
-                    StartCoroutine(Build());
-            }));
-            runGenerator = false;
+           Generate();
         }
 
         if(Input.GetKeyDown(KeyCode.B))
@@ -85,7 +142,26 @@ public class Generator : MonoBehaviour
             }
         }
     }
+     
+    private void Generate()
+    {
+        DeactivateLastLevel();
 
+        textLevel = new List<KeyValuePair<string, List<float>>>();
+        StartCoroutine(Run(flag =>
+        {
+            if(flag)
+                StartCoroutine(Build());
+        }));
+        runGenerator = false;
+    }
+
+
+    private void DeactivateLastLevel()
+    {
+        if(generatedLevels.Count > 0)
+            generatedLevels[generatedLevels.Count - 1].SetActive(false);
+    }
 
     private IEnumerator Run(System.Action<bool> complete)
     {
@@ -148,6 +224,8 @@ public class Generator : MonoBehaviour
             spawnPosition.y += tileSize.y;
             spawnPosition.z = initialPosition.z;
         }
+
+        generatedLevels.Add(generatedLevelClone);
         yield return true;
     }
 
@@ -220,10 +298,10 @@ public class Generator : MonoBehaviour
         {
             direction = "Right";
             tileType = ConvertToType(tileChar) + " " + direction;
-            standardProbabilities = csvManager.ProbabiltiesOfRow(tileType);
+            standardProbabilities = csvManager.RowProbabilities(tileType);
             var newTileChar = NextTextTile(standardProbabilities);
             
-            //Debug.Log("MESSAGE: Adding a tile " + newTileChar + " ," + tileType);
+            Debug.Log("MESSAGE: Adding a tile " + newTileChar + " ," + tileType);
             AddTextTile(newTileChar, rightIndex, direction);
 
         }
@@ -231,7 +309,7 @@ public class Generator : MonoBehaviour
         {
             direction = "Up";
             tileType = ConvertToType(tileChar) + " " + direction;
-            standardProbabilities = csvManager.ProbabiltiesOfRow(tileType);
+            standardProbabilities = csvManager.RowProbabilities(tileType);
             var newTileChar = NextTextTile(standardProbabilities);
 
             //Debug.Log("MESSAGE: Adding a tile " + newTileChar + " ," + tileType);
@@ -241,7 +319,7 @@ public class Generator : MonoBehaviour
         {
             direction = "Forward";
             tileType = ConvertToType(tileChar) + " " + direction;
-            standardProbabilities = csvManager.ProbabiltiesOfRow(tileType);
+            standardProbabilities = csvManager.RowProbabilities(tileType);
             var newTileChar = NextTextTile(standardProbabilities);
 
             //Debug.Log("MESSAGE: Adding a tile " + newTileChar + " ," + tileType);
@@ -264,7 +342,7 @@ public class Generator : MonoBehaviour
         {
             // Update the probabilities matrix for the tile. 
             var tileType = ConvertToType(tileChar) + " " + direction;
-            probabilitiesList = csvManager.ProbabiltiesOfRow(tileType);
+            probabilitiesList = csvManager.RowProbabilities(tileType);
 
             if(probabilitiesList == null)
             {
@@ -311,7 +389,7 @@ public class Generator : MonoBehaviour
             if(direction != "None")
             {
                 var tileType = ConvertToType(tileChar) + " " + direction;
-                probabilitiesList = csvManager.ProbabiltiesOfRow(tileType);
+                probabilitiesList = csvManager.RowProbabilities(tileType);
 
                 if(probabilitiesList == null)
                 {
@@ -337,11 +415,11 @@ public class Generator : MonoBehaviour
     {
         var index = GetIndexOfProbability(probabilities);
 
+       // Debug.Log("Index " + index); //+ " gets tileChar " + type);
 
         var type = csvManager.NameOfColumn(index);
         var tileChar = ConvertToChar(type);
 
-        //Debug.Log("Index " + index + " gets tileChar " + type);
 
 
 

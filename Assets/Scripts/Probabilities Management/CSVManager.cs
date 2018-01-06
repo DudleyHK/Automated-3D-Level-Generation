@@ -7,9 +7,7 @@ using Mono.Csv;
 
 public class CSVManager : MonoBehaviour
 {
-    public int Rows    { get; private set; }
-    public int Columns { get; private set; }
-    public List<float> Totals        { get; internal set; }
+    public List<int> Totals          { get; internal set; }
     public List<float> Probabilities { get; internal set; }
 
 
@@ -19,7 +17,7 @@ public class CSVManager : MonoBehaviour
     private List<string> columnIds    = new List<string>();
 
     private List<List<string>> gridData = new List<List<string>>();
-    private List<List<string>> probabsData = new List<List<string>>();
+    private List<List<string>> probabilityData = new List<List<string>>();
     private string csvPath        = "..//CTPPrototype//Assets//OutputData//";
     private string csvTotalsFile  = "Totals.csv";
     private string csvProbabsFile = "Probabilities.csv";
@@ -28,7 +26,7 @@ public class CSVManager : MonoBehaviour
 
     private void Start()
     {
-        Totals        = new List<float>();
+        Totals        = new List<int>();
         Probabilities = new List<float>();
 
         Read();
@@ -45,63 +43,71 @@ public class CSVManager : MonoBehaviour
 
     private void Read()
     {
+        InitRead();
         ReadTotals();
         ReadProbabilities();
     }
 
+    private void InitRead()
+    {
+        var dataFile = CsvFileReader.ReadAll(csvPath + csvTotalsFile, System.Text.Encoding.GetEncoding("gbk"));
+
+        for(int i = 0; i < gridData.Count; i++)
+        {
+            for(int j = 0; j < gridData[i].Count; j++)
+            {
+                var value = gridData[i][j];
+                if(i == 0)
+                {
+                    columnIds.Add(value);
+                }
+
+                if(j % gridData.Count == 0)
+                {
+                    rowIds.Add(value);
+                }
+            }
+        }
+    }
+
     private void ReadTotals()
     {
-        // TODO: Change this to read in the probabilities
         gridData = CsvFileReader.ReadAll(csvPath + csvTotalsFile, System.Text.Encoding.GetEncoding("gbk"));
 
-        //Debug.Log("REading and grid data size " + gridData.Count);
-        int rowIdx = 0;
-        int cellIdx = 0;
-        foreach(var row in gridData)
+        for(int i = 0; i < gridData.Count; i++)
         {
-            foreach(var cell in row)
+            for(int j = 0; j < gridData[i].Count; j++)
             {
-                if(rowIdx == 0)
+                var value = gridData[i][j];
+                if(i == 0)
                 {
-                    columnIds.Add(cell);
+                    columnIds.Add(value);
+                }
+                
+                if(j % gridData.Count == 0)
+                {
+                    rowIds.Add(value);
                 }
 
-                if(cellIdx == 0)
+                if(IsNumeric(value))
                 {
-                    rowIds.Add(cell);
+                    Totals.Add(int.Parse(value));
                 }
-
-                float result;
-                bool isNumeric = float.TryParse(cell, out result);
-                if(isNumeric)
-                {
-                    Totals.Add(result);
-                }
-
-                cellIdx++;
             }
-            rowIdx++;
-            cellIdx = 0;
         }
-        Rows = rowIds.Count;
-        Columns = columnIds.Count;
     }
 
     private void ReadProbabilities()
     {
-        // TODO: Change this to read in the probabilities
-        probabsData = CsvFileReader.ReadAll(csvPath + csvProbabsFile, System.Text.Encoding.GetEncoding("gbk"));
-        foreach(var row in probabsData)
+        probabilityData = CsvFileReader.ReadAll(csvPath + csvProbabsFile, System.Text.Encoding.GetEncoding("gbk"));
+        for(int i = 0; i < gridData.Count; i++)
         {
-            foreach(var cell in row)
+            for(int j = 0; j < gridData[i].Count; j++)
             {
-                float result;
-                bool isNumeric = float.TryParse(cell, out result);
-                if(isNumeric)
+                var value = gridData[i][j];
+                if(IsNumeric(value))
                 {
-                    if(result == float.NaN)
-                        result = 0f;
-                    Probabilities.Add(result);
+                    Probabilities.Add(float.Parse(value));
                 }
             }
         }
@@ -110,7 +116,6 @@ public class CSVManager : MonoBehaviour
 
    
 
-    // TODO: This should be done in the ParseLevel script where only a Total and ID is passed in here to set the value.
     /// <summary>
     /// Iterate through the output data and get the row and column index of the passed in data.
     ///  Use these indexs to find the position in the gridData list, then convert that idx to the 
@@ -120,37 +125,39 @@ public class CSVManager : MonoBehaviour
     public void SetTotalsValues(List<ArrayList> outputData)
     {
         // Debug.Log("MESSAGE: SETTING NEW PROBABILITY VALUES");
-        // Debug.Log("MESSAGE: OutputData size " + outputData.Count);
+         //Debug.Log("MESSAGE: OutputData size " + outputData.Count);
+
+        // Clear first.
+        for(int i = 0; i < Totals.Count; i++)
+        {
+            Totals[i] = 0;
+            Probabilities[i] = 0;
+        }
+
 
         foreach(var data in outputData)
         {
             var rowName    = (string)data[0];
             var columnName = (string)data[1];
-            var total      = (float) data[2];
+            var total      = (int)   data[2];
 
-            // Debug.Log("MESSAGE: From " + rowName + " To " + columnName + " new probability is " + probability);
 
-            for(var i = 0; i < rowIds.Count; i++)
+
+            var rowID = rowIds.FindIndex(n => 
+            { 
+                return n == rowName;  
+            });
+            var colID = columnIds.FindIndex(n =>
             {
-                for(var j = 0; j < columnIds.Count; j++)
-                {
-                    if(columnIds[j] == columnName &&
-                        rowIds[i] == rowName)
-                    {
-                        //Debug.Log("MESSAGE: Row " + i + " and Col " + j);
+                return n == columnName;
+            });
+            
+            //Debug.Log("MESSAGE: From " + rowName + " To " + columnName + " new probability is " + total);
+            //Debug.Log("MESSAGE: RowID " + rowID + " colID " + colID + " total " + total);
 
-                        // Debug.Log("From " + rowName + " To " + columnName + " new probability is " + probability);
-                        // Debug.Log("Row ID " + j + " and Column ID " + i);
-                        //Debug.Log("MESSAGE: Columns Count " + columnIds.Count);
+            var listID = ConvertToListID(rowID, colID);
 
-                        var gridIdx   = (i * columnIds.Count) + j;
-                        var totalsIdx = ConvertToProbabilitiesIdx(gridIdx);
-
-                        //Debug.Log("MESSSAGE: GridIdx is " + gridIdx + " and probabilitiesIdx is " + probabilityIdx);
-                        Totals[totalsIdx] = total;
-                    }
-                }
-            }
+            Totals[listID] = total;
         }
     }
 
@@ -160,36 +167,25 @@ public class CSVManager : MonoBehaviour
     /// </summary>
     /// <param name="rowID"></param>
     /// <returns></returns>
-    public float RowTotal(int rowID)
+    public int RowTotal(int rowID)
     {
-        if(rowID == 0)
-        {
-            //Debug.Log("ERROR: RowID attempting to acces top row");
-            return -1f;
-        }
-
-        var rowTotal = 0f;
-        var prevId = -1f; // TODO: Make the getting of data from different lists more reliable.
+        var rowTotal = 0;
         for(var i = 0; i < rowIds.Count; i++)
         {
             if(i != rowID) continue;
             for(var j = 0; j < columnIds.Count; j++)
             {
-                var gridIdx = (i * columnIds.Count) + j;
-                var totalsIdx = ConvertToProbabilitiesIdx(gridIdx);
-                if(totalsIdx == prevId)
-                {
-                    continue;
-                }
-
-                rowTotal += Totals[totalsIdx];
-                //Debug.Log("Totals id being added " + totalsIdx);
-
-                prevId = totalsIdx;
+                if(j == 0) continue;
+                
+                var listID = ConvertToListID(i, j);
+                if(listID >= 0)
+                    rowTotal += Totals[listID];
             }
         }
+        //Debug.Log("Row Total " + rowTotal + " for row " + rowID);
         return rowTotal;
     }
+
 
 
     /// <summary>
@@ -197,31 +193,25 @@ public class CSVManager : MonoBehaviour
     /// </summary>
     /// <param name="rowID"></param>
     /// <returns></returns>
-    public List<float> ProbabiltiesOfRow(string rowID)
+    public List<float> RowProbabilities(string rowID)
     {
         if(!rowIds.Contains(rowID))
         {
-            Debug.Log("ERROR: RowID " + rowID + " string invalid");
+           // Debug.Log("ERROR: RowID " + rowID + " string invalid");
             return null;
         }
 
         var probabilityList = new List<float>();
 
-        var prevId = -1f; // TODO: Make the getting of data from different lists more reliable... ??? What is this for?
         for(var i = 0; i < rowIds.Count; i++)
         {
             if(rowIds[i] != rowID) continue;
             for(var j = 0; j < columnIds.Count; j++)
             {
-                var gridIdx = (i * columnIds.Count) + j;
-                var probabilitiesIdx = ConvertToProbabilitiesIdx(gridIdx);
-                if(probabilitiesIdx == prevId)
-                {
-                    continue;
-                }
+                if(j == 0) continue;
 
-                probabilityList.Add(Probabilities[probabilitiesIdx]);
-                prevId = probabilitiesIdx;
+                var listID = ConvertToListID(i, j);
+                probabilityList.Add(Probabilities[listID]);
             }
         }
         return probabilityList;
@@ -247,40 +237,63 @@ public class CSVManager : MonoBehaviour
 
 
     /// <summary>
-    /// Count up until the idx is hit. If the probabilitiesIdx has been 
-    ///     incremented add one to bring it to counter the starting at -1.
+    /// Convert Row and Col ID to Csv file Index.
     /// </summary>
     /// <param name="idx"></param>
     /// <returns></returns>
-    private int ConvertToProbabilitiesIdx(int idx)
-    {
-        int counter = 0;
-        int probabilityIdx = 0;
+    private int ConvertToListID(int rowID, int colID)
+    { 
+        var csvID = (rowID * columnIds.Count) + colID;
+       //Debug.Log("MESSAGE: Csv - CsvID  " + csvID);
 
-        foreach(var row in gridData)
+        colID -= 1;
+        rowID -= 1;
+
+        var listID = (rowID * (columnIds.Count - 1)) + colID;
+       //Debug.Log("MESSAGE: List - ListID " + listID);
+
+        if(listID < 0)
         {
-            foreach(var cell in row)
-            {
-                if(idx == counter)
-                {
-                    break;
-                }
-
-                float result;
-                bool isNumeric = float.TryParse(cell, out result);
-                if(isNumeric)
-                {
-                    probabilityIdx++;
-                }
-                counter++;
-            }
+            Debug.Log("WARNING: ListID " + listID + " is less than 0");
+            return -1;
         }
-        return probabilityIdx;
+
+        ConvertToCsvID(rowID, colID);
+
+        return listID;
+    }
+
+    /// <summary>
+    /// Convert Row and Col ID to C# List Index.
+    /// </summary>
+    /// <param name="rowID"></param>
+    /// <param name="colID"></param>
+    /// <returns></returns>
+    private int ConvertToCsvID(int rowID, int colID)
+    {
+        var listID = (rowID * (columnIds.Count - 1)) + colID;
+        //Debug.Log("MESSAGE: Csv - ListID " + listID);
+
+        colID += 1;
+        rowID += 1;
+
+        var csvID = (rowID * columnIds.Count) + colID;
+        //Debug.Log("MESSAGE: Csv - CsvID " + csvID);
+
+        if(csvID < 0)
+        {
+            Debug.Log("WARNING: CsvID " + csvID + " is less than 0");
+            return -1;
+        }
+
+        return csvID;
+
+
     }
 
 
 
-    private void Write()
+    public void Write()
     {
         if(Totals.Count > 0)
         {
@@ -299,33 +312,25 @@ public class CSVManager : MonoBehaviour
 
     private void WriteTotals()
     {
-        int rowIdx = 0;
-        int cellIdx = 0;
-        int totalsIdx = 0;
-
-        foreach(var row in gridData)
+        for(int i = 0; i < rowIds.Count; i++)
         {
-            foreach(var cell in row)
+            for(int j = 0; j < columnIds.Count; j++)
             {
-                float result;
-                bool isNumeric = float.TryParse(cell, out result);
-                if(isNumeric)
-                {
-                    var total = Totals[totalsIdx];
-                    if(total == float.NaN) 
-                        total = 0f;
+                var value = gridData[i][j];
 
-                    gridData[rowIdx][cellIdx] = total.ToString();
-                    //Debug.Log("Probability idx is " + probabilityIdx + " and gridDataIdx is " + ((cellIdx * row.Count) + rowIdx));
-                    totalsIdx++;
+                if(IsNumeric(value))
+                { 
+                    var listID = ConvertToListID(i, j);
+                    var total = Totals[listID];
+
+                    gridData[i][j] = total.ToString();
                 }
-                cellIdx++;
             }
-            rowIdx++;
-            cellIdx = 0;
         }
         CsvFileWriter.WriteAll(gridData, csvPath + csvTotalsFile, System.Text.Encoding.GetEncoding("gbk"));
     }
+
+
 
 
     /// <summary>
@@ -334,46 +339,81 @@ public class CSVManager : MonoBehaviour
     /// </summary>
     private void WriteProbabilities()
     {
-        int rowIdx = 0;
-        int cellIdx = 0;
-        int probabsIdx = 0;
-
-        foreach(var row in gridData)
+        for(int i = 0; i < rowIds.Count; i++)
         {
-            foreach(var cell in row)
+            for(int j = 0; j < columnIds.Count; j++)
             {
-                float result;
-                bool isNumeric = float.TryParse(cell, out result);
-                if(isNumeric)
+                var value = gridData[i][j];
+
+                if(IsNumeric(value))
                 {
-                   // Debug.Log("Probability idx is " + probabsIdx + " has a value of " + Probabilities[probabsIdx].ToString());
-                   
-                    if(Probabilities[probabsIdx] == float.NaN)
-                    {
-                        Probabilities[probabsIdx] = 0f;
-                    }
+                    var listID = ConvertToListID(i, j);
+                    var probab = Probabilities[listID];
 
-
-                     
-                       
-
-                    gridData[rowIdx][cellIdx] = Probabilities[probabsIdx].ToString();
-                    //Debug.Log("Probability idx is " + probabsIdx + " has a value of " + Probabilities[probabsIdx].ToString());
-                    probabsIdx++;
+                    gridData[i][j] = probab.ToString();
                 }
-                cellIdx++;
             }
-            rowIdx++;
-            cellIdx = 0;
         }
         CsvFileWriter.WriteAll(gridData, csvPath + csvProbabsFile, System.Text.Encoding.GetEncoding("gbk"));
     }
 
 
-    
-
-    private void OnApplicationQuit()
+    /// <summary>
+    /// Wrapper function for the float IsNumberic function.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    private bool IsNumeric(string value)
     {
-      //  Write();
+        float result;
+        bool isNumeric = float.TryParse(value, out result);
+        if(isNumeric)
+        {
+            return true;
+        }
+        return false;
+    }
+
+   
+    /// <summary>
+    /// Set the probabilities values for a specific row.
+    /// </summary>
+    /// <param name="rowID"></param>
+    /// <param name="rowTotal"></param>
+    public void SetProbabilityValue(int rowID, int rowTotal)
+    {
+        if(rowTotal == 0) return;
+
+        for(var i = 0; i < rowIds.Count; i++)
+        {
+            if(i != rowID) continue;
+            for(var j = 0; j < columnIds.Count; j++)
+            {
+                var listID = ConvertToListID(i, j);
+                //Debug.Log("Row " + rowID + " listID " + listID);
+                if(listID < 0) continue;
+                
+                var total = Totals[listID];
+                if(total != 0)
+                {
+                    Probabilities[listID] = total / (float)rowTotal;
+                } 
+            }
+        }
+    }
+
+    /// <summary>
+    /// Return a list of all of the totals for each row. 
+    /// </summary>
+    /// <returns></returns>
+    public List<int> GetRowTotals()
+    {
+        var rowTotals = new List<int>();
+        for(int i = 0; i < rowIds.Count; i++)
+        {
+            //if(i == 0) continue;
+            rowTotals.Add(RowTotal(i));
+        }
+        return rowTotals;
     }
 }
