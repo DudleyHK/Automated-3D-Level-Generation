@@ -254,7 +254,7 @@ public class CSVManager : MonoBehaviour
 
         if(listID < 0)
         {
-            Debug.Log("WARNING: ListID " + listID + " is less than 0");
+            //Debug.Log("WARNING: ListID " + listID + " is less than 0");
             return -1;
         }
 

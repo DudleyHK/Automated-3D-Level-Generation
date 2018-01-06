@@ -54,6 +54,7 @@ public class Generator : MonoBehaviour
 
     private void OnEnable()
     {
+        GUIManager.parseEvent += ClearGeneratedLevels;
         GUIManager.typeSliderEvent += ChangeInitialTile;
         GUIManager.dimentionEvent += ChangeDimentions;
         GUIManager.generateEvent += Generate;
@@ -62,6 +63,7 @@ public class Generator : MonoBehaviour
 
     private void OnDisable()
     {
+        GUIManager.parseEvent -= ClearGeneratedLevels;
         GUIManager.typeSliderEvent -= ChangeInitialTile;
         GUIManager.dimentionEvent -= ChangeDimentions;
         GUIManager.generateEvent -= Generate;
@@ -105,7 +107,17 @@ public class Generator : MonoBehaviour
         }
     }
 
-
+    private void ClearGeneratedLevels(GameObject obj)
+    {
+        if(generatedLevels.Count > 0)
+        {
+            foreach(var level in generatedLevels)
+            {
+                Destroy(level);
+            }
+            generatedLevels.Clear();
+        }
+    }
 
     private void Start()
     {
@@ -143,7 +155,7 @@ public class Generator : MonoBehaviour
         }
     }
      
-    private void Generate()
+    private GameObject Generate()
     {
         DeactivateLastLevel();
 
@@ -154,6 +166,8 @@ public class Generator : MonoBehaviour
                 StartCoroutine(Build());
         }));
         runGenerator = false;
+
+        return generatedLevels[generatedLevels.Count - 1];
     }
 
 
@@ -162,6 +176,7 @@ public class Generator : MonoBehaviour
         if(generatedLevels.Count > 0)
             generatedLevels[generatedLevels.Count - 1].SetActive(false);
     }
+
 
     private IEnumerator Run(System.Action<bool> complete)
     {
@@ -192,6 +207,7 @@ public class Generator : MonoBehaviour
         var spawnPosition = Vector3.zero;
 
         var generatedLevelClone = Instantiate(generatedLevelPrefab, initialPosition, Quaternion.identity);
+       // generatedTiles.Clear();
 
         for(int i = 0; i < maxHeight; i++)
         {
@@ -216,7 +232,7 @@ public class Generator : MonoBehaviour
 
                     var clone = Instantiate(tilePrefab, spawnPosition, Quaternion.identity, layer.transform);
 
-                    // generatedTiles.Add(clone);
+                    //generatedTiles.Add(clone);
                 }
                 spawnPosition.z += tileSize.z;
                 spawnPosition.x = initialPosition.x;
@@ -224,10 +240,11 @@ public class Generator : MonoBehaviour
             spawnPosition.y += tileSize.y;
             spawnPosition.z = initialPosition.z;
         }
-
         generatedLevels.Add(generatedLevelClone);
         yield return true;
     }
+
+
 
     /// <summary>
     /// Initialise all positions to '*'
@@ -301,7 +318,7 @@ public class Generator : MonoBehaviour
             standardProbabilities = csvManager.RowProbabilities(tileType);
             var newTileChar = NextTextTile(standardProbabilities);
             
-            Debug.Log("MESSAGE: Adding a tile " + newTileChar + " ," + tileType);
+           // Debug.Log("MESSAGE: Adding a tile " + newTileChar + " ," + tileType);
             AddTextTile(newTileChar, rightIndex, direction);
 
         }

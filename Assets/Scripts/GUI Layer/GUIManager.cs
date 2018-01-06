@@ -27,6 +27,8 @@ public class GUIManager : MonoBehaviour
     private List<GameObject> levels;
     [SerializeField]
     private GameObject displayedLevel;
+    [SerializeField]
+    private GameObject generatedLevel;
 
 
 
@@ -40,7 +42,7 @@ public class GUIManager : MonoBehaviour
     public delegate void ParseEvent(GameObject level);
     public static event ParseEvent parseEvent;
 
-    public delegate void GenerateEvent();
+    public delegate GameObject GenerateEvent();
     public static event GenerateEvent generateEvent;
 
     public delegate void ChangeLevelDisplay();
@@ -79,6 +81,18 @@ public class GUIManager : MonoBehaviour
 
         if(!depth.isFocused)
             depth.text = Generator.Depth.ToString();
+
+        if(displayedLevel)
+        {
+            displayedLevel.transform.Rotate(displayedLevel.GetComponent<LevelData>().Centre, 5 * Time.deltaTime);
+        }
+
+
+        // Change this to change the Z axis of the Camera.
+        //float feildOfView = Camera.main.fieldOfView;
+        //Camera.main.transform.position += Input.GetAxis("Mouse ScrollWheel") * -25f;
+        //feildOfView = Mathf.Clamp(feildOfView, 1, 10000);
+        //Camera.main.fieldOfView = feildOfView;
     }
 
 
@@ -101,14 +115,13 @@ public class GUIManager : MonoBehaviour
         });
 
         parseEvent(level);
-
         generateButton.interactable = true;
     }
 
     public void GenerateLevel()
     {
-        generateEvent();
         Destroy(displayedLevel);
+        displayedLevel = generateEvent();
     }
 
     public void SliderChanged()
