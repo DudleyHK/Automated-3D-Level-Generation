@@ -346,11 +346,11 @@ public class Generator : MonoBehaviour
         var list = textLevel[directionalID].Value;
         for(int i = 0; i < list.Count; i++)
         {
-            if(newList[i] != 0)
-            {
-                //Debug.Log(list[i] + " + "  + newList[i] + " = " + (list[i] + newList[i]));
+            if(newList[i] == 0) continue;
+            if(list[i] == 0) continue;
+         
+            //Debug.Log(list[i] + " + "  + newList[i] + " = " + (list[i] + newList[i]));
                 list[i] *= newList[i];
-            }
         }
          
        // //Debug.Log("Probability values for index " + directionalID);
