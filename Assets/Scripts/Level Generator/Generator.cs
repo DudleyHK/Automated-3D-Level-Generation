@@ -49,7 +49,7 @@ public class Generator : MonoBehaviour
 
 
 
-    private List<Directions> directions = new List<Directions>(new Directions[] { Directions.Right, Directions.Forward });
+    private List<Directions> directions = new List<Directions>(new Directions[] { Directions.Right, Directions.Up, Directions.Forward });
 
 
     private void OnEnable()
@@ -157,7 +157,7 @@ public class Generator : MonoBehaviour
      
     private GameObject Generate()
     {
-        DeactivateLastLevel();
+        //DeactivateLastLevel();
 
         textLevel = new List<KeyValuePair<string, List<float>>>();
         StartCoroutine(Run(flag =>
@@ -264,7 +264,7 @@ public class Generator : MonoBehaviour
     /// </summary>
     private void GenerateStringLevel()
     {
-        Debug.Log("textLevel size " + textLevel.Count);
+        //Debug.Log("textLevel size " + textLevel.Count);
 
         /*Being the Main Generation Loop*/
         for(int i = 0; i < maxHeight; i++)
@@ -277,191 +277,346 @@ public class Generator : MonoBehaviour
                 {
                     var index = baseIndex * maxWidth + k;
 
+                   ///Debug.Log("i " + i);
+                   ///Debug.Log("maxHeight " + maxHeight);
+                   ///Debug.Log(" j " + j);
+                   ///Debug.Log("maxWidth " + maxWidth);
+                   ///Debug.Log(" k " + k);
+                   ///Debug.Log("Index: " + index);
+                   ///
+
                     if(index == 0)
-                        AddTextTile(initialTileChar.ToString(), index);
+                        textLevel[index] = new KeyValuePair<string, List<float>>(initialTileChar.ToString(), null);
 
 
-                    //Debug.Log("i " + i);
-                    //Debug.Log("maxHeight " + maxHeight);
-                    //Debug.Log(" j " + j);
-                    //Debug.Log("maxWidth " + maxWidth);
-                    //Debug.Log(" k " + k);
-                    //
-                    //Debug.Log("Index: " + index);
-                    WriteTextLevel(index);
 
+
+                    var currentTile = textLevel[index].Key;
+                    //Debug.Log("CurrentTile " + currentTile);
+
+                    foreach(var direction in directions)
+                    {
+                        // Check if this direction has a valid index
+                        var directionalID = GetDirectionalID(direction, index);
+                        if(directionalID < 0) continue;
+
+                        var directionalChar = textLevel[directionalID].Key;
+
+                        // Set the tile type of the current index plus its direction
+                        var rowID = ConvertToType(currentTile) + " " + direction;
+                        var rowTransitionMatrix = RowProbabilities(rowID);
+
+                        if(!InitialiseTile(directionalID, directionalChar, rowTransitionMatrix))
+                        {
+                            UpdateTile(directionalID, rowTransitionMatrix);
+                        }
+
+                        //Debug.Log("Current Index " + index + " (" + currentTile + ", " + rowID +  ")... Direction " + direction + " type " + directionalChar);
+
+                    }
+                   //WriteTextLevel(index);
                 }
             }
         }
     }
 
-
-    private void WriteTextLevel(int index)
+    /// <summary>
+    /// If the tile value is * initialise it to a type character.
+    /// </summary>
+    /// <param name="directionalID"></param>
+    /// <param name="directionalChar"></param>
+    /// <param name="list"></param>
+    /// <returns> 
+    /// Return true if its initialised and false if not. 
+    /// </returns>
+    private bool InitialiseTile(int directionalID, string directionalChar, List<float> list)
     {
-        var standardProbabilities = default(List<float>);
-        var tileChar = textLevel[index].Key;
-        var direction = "None";
-        var tileType = "None";
-
-        var upIndex = GetGridUp(index);
-        var forwardIndex = GetGridForward(index);
-        var rightIndex = GetGridRight(index);
-
-
-        if(tileChar == "*") return;
-
-
-        if(rightIndex >= 0)
+        // If the directional tile has not been set.
+        if(directionalChar == "*")
         {
-            direction = "Right";
-            tileType = ConvertToType(tileChar) + " " + direction;
-            standardProbabilities = csvManager.RowProbabilities(tileType);
-            var newTileChar = NextTextTile(standardProbabilities);
-            
-           // Debug.Log("MESSAGE: Adding a tile " + newTileChar + " ," + tileType);
-            AddTextTile(newTileChar, rightIndex, direction);
-
+            SetTextLevelTile(directionalID, list);
+            return true;
         }
-        if(upIndex >= 0)
-        {
-            direction = "Up";
-            tileType = ConvertToType(tileChar) + " " + direction;
-            standardProbabilities = csvManager.RowProbabilities(tileType);
-            var newTileChar = NextTextTile(standardProbabilities);
-
-            //Debug.Log("MESSAGE: Adding a tile " + newTileChar + " ," + tileType);
-            AddTextTile(newTileChar, upIndex, direction);
-        }
-        if(forwardIndex >= 0)
-        {
-            direction = "Forward";
-            tileType = ConvertToType(tileChar) + " " + direction;
-            standardProbabilities = csvManager.RowProbabilities(tileType);
-            var newTileChar = NextTextTile(standardProbabilities);
-
-            //Debug.Log("MESSAGE: Adding a tile " + newTileChar + " ," + tileType);
-            AddTextTile(newTileChar, forwardIndex, direction);
-        }
+        return false;
     }
 
-    // TODO: Update the tileChar after the 
+
+    private void UpdateTile(int directionalID, List<float> newList)
+    {
+        var list = textLevel[directionalID].Value;
+        for(int i = 0; i < list.Count; i++)
+        {
+            if(newList[i] != 0)
+            {
+                //Debug.Log(list[i] + " + "  + newList[i] + " = " + (list[i] + newList[i]));
+                list[i] *= newList[i];
+            }
+        }
+         
+       // //Debug.Log("Probability values for index " + directionalID);
+       // foreach(var prob in list)
+       // {
+       //   //  Debug.Log("Value " + prob);
+       // }
+        SetTextLevelTile(directionalID, list);
+    }
+
+    /// <summary>
+    /// Set the list of a surrounding levelText tile
+    /// </summary>
+    /// <param name="directionalID"></param>
+    /// <param name="list"></param>
+    private void SetTextLevelTile(int directionalID, List<float> list)
+    {
+        // Get the ID of the tile type.
+        var probabilityID = GetProbabilityID(list);
+        var probabiltyValue = list[probabilityID];
+
+        // Convert the ID into the tile string. 
+        var columnType = csvManager.NameOfColumn(probabilityID + 1);
+        var columnChar = ConvertToChar(columnType);
+
+       
+        //Debug.Log("Column Name " + columnType + " char " + columnChar);
+
+        // Set the tile at directionalID to the column name 
+        textLevel[directionalID] = new KeyValuePair<string, List<float>>(columnChar, list);
+    }
+
+
+    /// <summary>
+    /// Get the sum of all values in the list. Choose a random value
+    ///     between 0 and 1 and subract from the rand number until
+    ///     the random number is less than the probability.
+    /// </summary>
+    /// <param name="list"></param>
+    /// <returns></returns>
+    private int GetProbabilityID(List<float> list)
+    {
+        float sum = 0;
+        for(int i = 0; i < list.Count; i++)
+            sum += list[i];
+
+
+        var rand = Random.Range(0f, sum);
+        //Debug.Log("Random Number: " + rand);
+
+        var index = 0;
+        for(int i = 0; i < list.Count; i++)
+        {
+            if(list[i] == 0) continue;
+            if(rand < list[i])
+            {
+                index = i;
+            }
+            else
+            {
+                rand -= list[i]; 
+            }
+        }
+        return index;
+    }
+
+
+    ///private void WriteTextLevel(int index)
+    ///{
+    ///    var tileChar = textLevel[index].Key;
+    ///    if(tileChar == "*") return;
+    ///
+    ///    var upIndex      = GetGridUp(index);
+    ///    var forwardIndex = GetGridForward(index);
+    ///    var rightIndex   = GetGridRight(index);
+    ///    
+    ///    //Debug.Log("MESSAGE: Writing text level for tilechar " + textLevel[index].Key);
+    ///    if(rightIndex   > 0) GenerateTextFor(tileChar, rightIndex,   "Right");
+    ///    if(forwardIndex > 0) GenerateTextFor(tileChar, forwardIndex, "Forward");
+    ///    if(upIndex      > 0) GenerateTextFor(tileChar, upIndex,      "Up");
+    ///}
+
+
+   ///private void GenerateTextFor(string tileChar, int dirIndex, string direction)
+   ///{
+   ///    if(dirIndex < 0) return;
+   ///    
+   ///    var tileType = ConvertToType(tileChar) + " " + direction;
+   ///    var probabilities = csvManager.RowProbabilities(tileType);
+   ///
+   ///    var nextTile = NextTextTile(probabilities);
+   ///    AddTextTile(ConvertToType(nextTile), dirIndex, direction);
+   ///}
+
     /// <summary>
     /// Adds a new text tile to the list. If space being added to is already occupied 
     /// this function will update the transition matrix for that space.
     /// </summary>
     /// <param name="tileChar"></param>
     /// <param name="direction"></param>
-    private void AddTextTile(string tileChar, int index, string direction = "None")
+    ///private void AddTextTile(string tileType, int index, string direction = "StartTile")
+    ///{
+    ///    Debug.Log("Tile Type of index " + index + " is " + tileType);
+    ///
+    ///    var tileChar = ConvertToChar(tileType);
+    ///    
+    ///    if(direction == "StartTile")
+    ///    {
+    ///        return;
+    ///    }
+    ///
+    ///    tileType += " " + direction;
+    ///    var probabilities = RowProbabilities(tileType);
+    ///    if(probabilities == null)
+    ///    {
+    ///        Debug.Log("ERROR: Probabilities returned NULL");
+    ///    }
+    ///
+    ///
+    ///
+    ///
+    ///    textLevel[index] = new KeyValuePair<string, List<float>>(tileChar, probabilities);
+    ///}
+
+
+    /// <summary>
+    /// Get the  tile at the direciton from the index.
+    /// </summary>
+    /// <param name="dir"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    private int GetDirectionalID(Directions direction, int index)
     {
-        var probabilitiesList = default(List<float>);
+        var dirIndex = 0;
 
-        if(textLevel[index].Key != "*")
+        switch(direction)
         {
-            // Update the probabilities matrix for the tile. 
-            var tileType = ConvertToType(tileChar) + " " + direction;
-            probabilitiesList = csvManager.RowProbabilities(tileType);
-
-            if(probabilitiesList == null)
-            {
-                Debug.Log("ERROR: Probabilities has returned null");
-                return;
-            }
-
-            //Debug.Log("MESSAGE: Updating the probabilty list of index " + index + "(tileChar "  + tileChar + ")");
-            for(int i = 0; i < textLevel[index].Value.Count; i++)
-            {
-                var value = textLevel[index].Value[i];
-                var probabilty = probabilitiesList[i];
-
-                if(probabilty == float.NaN || value == float.NaN)
-                {
-                    continue;
-                }
-                else if(value == 0 && probabilty == 0)
-                {
-                    continue;
-                }
-                else if(value > 0 && probabilty == 0)
-                {
-                    continue;
-                }
-                else if(value == 0 && probabilty > 0)
-                {
-                    value = probabilty;
-                }
-                else
-                {
-                    value *= probabilty;
-                }
-
-                textLevel[index].Value[i] = value;
-            }
-
-            tileChar = NextTextTile(textLevel[index].Value);
-            //Debug.Log("MESSAGE: Updating to " + tileChar);
+            case Directions.Right:
+                dirIndex = GetGridRight(index);
+                break;
+            case Directions.Up:
+                dirIndex = GetGridUp(index);
+                break;
+            case Directions.Forward:
+                dirIndex = GetGridForward(index);
+                break;
+            default:
+                Debug.Log("ERROR: Invalid direction used");
+                break;
         }
-        // Set a basic probabilties matrix for the tile. 
-        else
-        {
-            if(direction != "None")
-            {
-                var tileType = ConvertToType(tileChar) + " " + direction;
-                probabilitiesList = csvManager.RowProbabilities(tileType);
 
-                if(probabilitiesList == null)
-                {
-                    Debug.Log("ERROR: Probabilities has returned null");
-                    return;
-                }
-            }
-            else
-            {
-                //Debug.Log("MESSAGE: TextTile is being initialised without a direction");
-                probabilitiesList = null;
-            }
-            textLevel[index] = new KeyValuePair<string, List<float>>(tileChar, probabilitiesList);
-        }
+        // Is directionIndex at a valid position
+        if(dirIndex < 0)
+            return -1;
+
+        return dirIndex;
     }
+
+    /// <summary>
+    /// Return the list of probabilities of a specific row.
+    /// </summary>
+    /// <param name="tileType"></param>
+    /// <returns></returns>
+    private List<float> RowProbabilities(string tileType)
+    {
+        return csvManager.RowProbabilities(tileType);
+    }
+
+
+    /// <summary>
+    /// Use the 'otherList' of probabilities to update the 'currentList' of probabilities.
+    /// </summary>
+    /// <param name="otherList"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    ///private string UpdateTextTile(List<float> otherList, int index)
+    ///{
+    ///    var currentList = textLevel[index].Value;
+    ///
+    ///    //Debug.Log("MESSAGE: Updating the probabilty list of index " + index + "(tileChar "  + tileChar + ")");
+    ///    for(int i = 0; i < textLevel[index].Value.Count; i++)
+    ///    {
+    ///        var value      = currentList[i];
+    ///        var probabilty = otherList[i];
+    ///
+    ///        if(probabilty == float.NaN || value == float.NaN)
+    ///        {
+    ///            continue;
+    ///        }
+    ///        else if(value == 0 && probabilty == 0)
+    ///        {
+    ///            continue;
+    ///        }
+    ///        else if(value > 0 && probabilty == 0)
+    ///        {
+    ///            continue;
+    ///        }
+    ///        else if(value == 0 && probabilty > 0)
+    ///        {
+    ///            value = probabilty;
+    ///        }
+    ///        else
+    ///        {
+    ///            value *= probabilty;
+    ///        }
+    ///        currentList[i] = value;
+    ///    }
+    ///
+    ///    return NextTextTile(currentList);
+    ///}
 
     /// <summary>
     /// Pass in a list of probabilities and return a Tile Character.
     /// </summary>
     /// <param name="probabilties"></param>
     /// <returns></returns>
-    private string NextTextTile(List<float> probabilities)
-    {
-        var index = GetIndexOfProbability(probabilities);
-
-       // Debug.Log("Index " + index); //+ " gets tileChar " + type);
-
-        var type = csvManager.NameOfColumn(index);
-        var tileChar = ConvertToChar(type);
-
-
-
-
-        return tileChar;
-    }
-
-    private int GetIndexOfProbability(List<float> probabilities)
-    {
-        int counter = 0;
-        int listID = 0;
-        
-        while(counter < 100)
-        {
-            if(listID >= probabilities.Count)
-                listID = 0;
+    ///private string NextTextTile(List<float> probabilities)
+    ///{
+    ///    var index = GetIndexOfProbability(probabilities);
+    ///
+    ///   // Debug.Log("Index " + index); //+ " gets tileChar " + type);
+    ///
+    ///    var type = csvManager.NameOfColumn(index);
+    ///    var tileChar = ConvertToChar(type);
+    ///
+    ///
+    ///
+    ///
+    ///    return tileChar;
+    ///}
 
 
-            if(FlipCoin(probabilities[listID++]))
-            {
-                break;
-            }
-            counter++;
-        }
-        return listID;
-    }
+    ///private int GetIndexOfProbability(List<float> probabilities)
+    ///{
+    ///    int counter = 0;
+    ///    int listID = 0;
+    ///    
+    ///   /// Use highest probability in the Martix
+       ///float highest = 0f;
+       ///foreach(var probab in probabilities)
+       ///{
+       ///    Debug.Log("MESSAGE: N " + probab);
+       ///    if(probab > highest)
+       ///    {
+       ///        highest = probab;
+       ///    }
+       ///    listID++;
+       ///}
+       ///Debug.Log("Highest Probability: " + highest);
+       ///return listID;
+    ///
+    ///
+    ///    while(counter < 100)
+    ///    {
+    ///        if(listID >= probabilities.Count)
+    ///            listID = 0;
+    ///
+    ///
+    ///        if(FlipCoin(probabilities[listID++]))
+    ///        {
+    ///            break;
+    ///        }
+    ///        counter++;
+    ///    }
+    ///    return listID;
+    ///}
 
     private string ConvertToType(string tileChar)
     {

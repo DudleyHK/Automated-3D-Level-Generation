@@ -185,7 +185,7 @@ public class ParseLevel : MonoBehaviour
                     //  outputData.Add(new ArrayList { tag, neighbourTag, 1});
                     //Debug.Log("MESSAGE: From " + newList[0] + " to " + newList[1] + " are being added to outputData with data of " + newList[2]);
                 }
-                DebugDrawLines(direction, centre, dir);
+                //DebugDrawLines(direction, centre, dir);
             }
             //var debugObj = Instantiate(debug_originObject, centre, Quaternion.identity);
         }
