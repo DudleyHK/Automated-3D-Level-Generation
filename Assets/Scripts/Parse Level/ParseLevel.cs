@@ -14,6 +14,8 @@ public class ParseLevel : MonoBehaviour
 {
     public GameObject debug_originObject;
 
+    public bool accountAirTile = false;
+
     [SerializeField]
     private GameObject level;
     [SerializeField]
@@ -33,11 +35,11 @@ public class ParseLevel : MonoBehaviour
     private int startIdx = -1;
     [SerializeField]
     private bool parseLevel = false;
-  
+
 
     private CSVManager csvManager;
 
-    
+
 
 
     private void OnEnable()
@@ -126,8 +128,8 @@ public class ParseLevel : MonoBehaviour
             }
             idx++;
         }
-        
-       
+
+
     }
 
     /// <summary>
@@ -159,9 +161,9 @@ public class ParseLevel : MonoBehaviour
                     continue;
                 }
 
-                // TODO: Make this turn on and offable
-                //if(neighbourTag == "Air")
-                //    continue;
+                if(accountAirTile)
+                  if(neighbourTag == "Air")
+                      continue;
 
 
                 ArrayList list;
@@ -258,7 +260,7 @@ public class ParseLevel : MonoBehaviour
     }
 
     private void DebugDrawLines(Directions directions, Vector3 origin, Vector3 dir)
-    {        
+    {
         switch(directions)
         {
             case Directions.Right:

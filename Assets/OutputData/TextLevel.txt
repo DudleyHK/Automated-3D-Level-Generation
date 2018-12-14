@@ -1,75 +1,16 @@
 Bottom Layer
-WT WT WL WL 
-WT WT A WL 
-A WT M A 
-M A WL M 
-M M A M 
-M M M M 
-M M M M 
-M M M M 
-M M M M 
-M M M M 
-M M M M 
-M M M M 
-
-
-Layer 1
-M M M M 
-M M M M 
-M M M M 
-M M M M 
-M M M M 
-M M M M 
-M M M M 
-A A A WL 
-A A M A 
-M A WT M 
-A M A WT 
-WT A M WT 
-
-
-Layer 2
-M M M M 
-M M M M 
-A A A WL 
-A A M A 
-M A WT M 
-A M A WT 
-WT A M WT 
-WT WT G G 
-WT G G G 
-G G G G 
-G G G G 
-G G G G 
-
-
-Layer 3
-A M A WT 
-WT A M WT 
-WT WT G G 
-WT G G G 
-G G G G 
-G G G G 
-G G G G 
-G G G G 
-G G G G 
-M M M A 
-M M G M 
-G M A G 
+WT M M 
+M M M 
+M M M 
+M M M 
+M M M 
 
 
 Top Layer
-G G G G 
-G G G G 
-G G G G 
-G G G G 
-M M M A 
-M M G M 
-G M A G 
-A G M M 
-A A G A 
-A A A A 
-A A A A 
-A A A A 
+M M M 
+M M M 
+M M M 
+M M M 
+M M M 
 
 

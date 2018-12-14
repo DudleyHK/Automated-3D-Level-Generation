@@ -5,11 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class GUIManager : MonoBehaviour 
+public class GUIManager : MonoBehaviour
 {
     [SerializeField]
     private Slider  typeSlider;
-	[SerializeField]
+	   [SerializeField]
     private Text    typeLabel;
     [SerializeField]
     private InputField height;
@@ -61,7 +61,7 @@ public class GUIManager : MonoBehaviour
         {
             levelNames.Add(level.name);
         }
-        
+
         levelSelection.AddOptions(levelNames);
         levelSelection.captionText.text = levelNames[0];
         ChangeDisplayLevel(0);
@@ -77,7 +77,7 @@ public class GUIManager : MonoBehaviour
 
         if(!width.isFocused)
             width.text = Generator.Width.ToString();
-        
+
 
         if(!depth.isFocused)
             depth.text = Generator.Depth.ToString();
@@ -109,8 +109,8 @@ public class GUIManager : MonoBehaviour
     public void ParseLevel()
     {
         var selected = levelSelection.captionText;
-        var level    = levels.Find(obj => 
-        { 
+        var level    = levels.Find(obj =>
+        {
             return (selected.text == obj.name);
         });
 
